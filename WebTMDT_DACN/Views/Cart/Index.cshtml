@@ -1,0 +1,489 @@
+﻿@using WebTMDT_DACN.Models.ViewModels
+@model CartItemViewModel
+@{
+    ViewData["Title"] = "Giỏ Hàng";
+    int productCount = Model.CartItems.Sum(item => item.Quantity); // Đếm tổng số lượng sản phẩm
+}
+
+<style>
+    .cart-page-section {
+        background: #f9f9f9;
+        padding: 40px 0;
+    }
+
+    .cart-header {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .cart-list {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 15px;
+    }
+
+    .cart-item-card {
+        display: flex;
+        align-items: center;
+        padding: 20px 10px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .cart-item-card:last-child {
+            border-bottom: none;
+        }
+
+    .cart-item-image {
+        width: 100px;
+        margin-right: 20px;
+    }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+    .cart-item-details {
+        flex-grow: 1;
+        padding-right: 15px;
+    }
+
+        .cart-item-details h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 5px 0;
+        }
+
+            .cart-item-details h4 a:hover {
+                color: var(--primary-color);
+            }
+
+        .cart-item-details .price {
+            font-size: 1rem;
+            color: #555;
+            font-weight: 600;
+            margin: 0;
+        }
+
+    .cart-item-quantity {
+        width: 120px;
+        margin-right: 15px;
+    }
+
+    .quantity-control {
+        display: flex;
+        width: 120px;
+    }
+
+        .quantity-control .btn {
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            font-weight: 700;
+            color: #555;
+        }
+
+            .quantity-control .btn:first-child {
+                border-radius: 3px 0 0 3px;
+            }
+
+            .quantity-control .btn:last-child {
+                border-radius: 0 3px 3px 0;
+            }
+
+            .quantity-control .btn:hover {
+                background: #ddd;
+            }
+
+        .quantity-control input {
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 6px;
+            font-size: 1rem;
+        }
+
+    .cart-item-total {
+        width: 120px;
+        text-align: right;
+        margin-right: 15px;
+    }
+
+        .cart-item-total .total-price {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .cart-item-remove {
+        width: 30px;
+        text-align: center;
+    }
+
+        .cart-item-remove a {
+            font-size: 1.5rem;
+            color: #d9534f;
+        }
+
+            .cart-item-remove a:hover {
+                color: #c9302c;
+            }
+
+    .clear-cart-btn {
+        margin-top: 15px;
+    }
+
+    .cart-summary-box {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 30px;
+    }
+
+        .cart-summary-box h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .cart-summary-box .total-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .cart-summary-box .grand-total-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+            .cart-summary-box .grand-total-line .total-price {
+                color: var(--primary-color);
+            }
+
+        .cart-summary-box .btn {
+            display: block;
+            width: 100%;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 12px;
+            font-size: 1rem;
+            margin-top: 25px;
+        }
+
+        .cart-summary-box .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+
+    .cart-empty {
+        text-align: center;
+        padding: 50px;
+        background: #fff;
+        border-radius: 8px;
+    }
+
+    .shipping-calculator {
+        border-top: 1px solid #f0f0f0;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 20px 0;
+    }
+
+        .shipping-calculator p {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .shipping-calculator .form-control {
+            margin-bottom: 10px;
+        }
+    /* === CSS CHO NÚT TÍNH SHIP MỚI === */
+    .btn-calculate-shipping {
+        margin-top: 10px;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        font-weight: 600;
+        color: #555;
+    }
+
+        .btn-calculate-shipping:hover {
+            background: #ddd;
+            color: #333;
+        }
+</style>
+
+<section id="cart_items" class="cart-page-section">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+
+        @if (Model.CartItems.Count > 0)
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    <h3 class="cart-header">Giỏ hàng của bạn (@Model.CartItems.Count sản phẩm)</h3>
+                    <div class="cart-list">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <div class="cart-item-card">
+                                <div class="cart-item-image">
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
+                                        <img src="~/media/products/@item.Image" alt="@item.ProductName">
+                                    </a>
+                                </div>
+                                <div class="cart-item-details">
+                                    <h4><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.ProductName</a></h4>
+                                    <p class="price">@item.Price.ToString("#,##0 VNĐ")</p>
+                                </div>
+                                <div class="cart-item-quantity">
+                                    <div class="quantity-control">
+                                        <a class="btn btn-default" asp-action="Decrease" asp-controller="Cart" asp-route-id="@item.ProductId"> - </a>
+                                        <input class="form-control" type="text" name="quantity" value="@item.Quantity" readonly size="2">
+                                        <a class="btn btn-default" asp-action="Increase" asp-controller="Cart" asp-route-id="@item.ProductId"> + </a>
+                                    </div>
+                                </div>
+                                <div class="cart-item-total">
+                                    <p class="total-price">@Model.CartItems.Where(x => x.ProductId == item.ProductId).Sum(x => x.Quantity * x.Price).ToString("#,##0 VNĐ")</p>
+                                </div>
+                                <div class="cart-item-remove">
+                                    <a class="cart_quantity_delete" asp-action="Remove" asp-controller="Cart" asp-route-id="@item.ProductId"><i class="fa fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <a class="btn btn-danger clear-cart-btn" asp-controller="Cart" asp-action="Clear">
+                        <i class="fa fa-trash-o"></i> Xóa Toàn Bộ Giỏ Hàng
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="cart-summary-box">
+                        <h3>Tóm Tắt Giỏ Hàng</h3>
+
+                        <div class="total-line">
+                            <span>Tạm tính:</span>
+                            <span id="sub-total-price">@Model.GrandToTal.ToString("#,##0 VNĐ")</span>
+                        </div>
+
+                        <div class="shipping-calculator">
+                            <p>Ước tính Phí Vận Chuyển</p>
+                            <div class="form-group">
+                                <select id="tinh" class="form-control">
+                                    <option value="0">Chọn Tỉnh Thành</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select id="quan" class="form-control">
+                                    <option value="0">Chọn Quận Huyện</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select id="phuong" class="form-control">
+                                    <option value="0">Chọn Phường Xã</option>
+                                </select>
+                            </div>
+
+                            <button type="button" class="btn btn-default btn-block btn-calculate-shipping">
+                                <i class="fa fa-calculator"></i> Tính Phí Ship
+                            </button>
+                            <button type="button" class="btn btn-danger" id="btn-remove-shipping">
+                                Bỏ chọn vận chuyển
+                            </button>
+                            @* <p><a asp-action="DeleteShipping" asp-controller="Cart">Xóa shipping</a></p> *@
+                        </div>
+
+                        <div class="total-line" style="margin-top: 20px;">
+                            <span>Phí ship:</span>
+                            <span class="total-price" id="grand-total-price">@Model.ShippingCost.ToString("#,##0 VNĐ")</span>
+                        </div>
+
+                        <div class="grand-total-line">
+                            <span>Tổng cộng:</span>
+                            <span class="total-price" id="grand-total-price">@Model.GrandToTal.ToString("#,##0 VNĐ")</span>
+                        </div>
+
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            @if(Model.ShippingCost <= 0)
+                            {
+                                <a disabled="disabled" class="btn btn-primary" asp-controller="Checkout" asp-action="Checkout">
+                                    <i class="fa fa-check"></i> Tiến hành Thanh Toán
+                                </a>
+                                <span class="text text-danger">Yêu cầu tính phí vận chuyển trước khi đặt hàng</span>
+                            } else
+                            {
+                                <a class="btn btn-primary" asp-controller="Checkout" asp-action="Checkout">
+                                    <i class="fa fa-check"></i> Tiến hành Thanh Toán
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary" asp-controller="Account" asp-action="Login">
+                                <i class="fa fa-lock"></i> Đăng nhập để Thanh Toán
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="cart-empty">
+                        <h3>Giỏ hàng của bạn đang trống!</h3>
+                        <p>Hãy quay lại trang chủ để bắt đầu mua sắm.</p>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary" style="background:var(--primary-color); border:none;">
+                            <i class="fa fa-home"></i> Về Trang Chủ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            // --- SCRIPT MỚI: Xử lý nút Tính Phí Ship ---
+            // (Đã đổi class từ .btn-add-shipping sang .btn-calculate-shipping)
+            $(".btn-calculate-shipping").click(function () {
+                var tinh = $("#tinh").find("option:selected").text();
+                var quan = $("#quan").find("option:selected").text();
+                var phuong = $("#phuong").find("option:selected").text();
+
+                // Cải thiện logic kiểm tra (check text mặc định)
+                if (tinh == "Chọn Tỉnh Thành" || quan == "Chọn Quận Huyện" || phuong == "Chọn Phường Xã") {
+                    Swal.fire("Lỗi", "Vui lòng chọn đầy đủ Tỉnh/Quận/Phường.", "error");
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetShipping", "Cart")",
+                        data: { tinh: tinh, quan: quan, phuong: phuong }, // Send data to the server
+                        success: function (result) {
+                            if (result) {
+                                // Hiển thị thông báo thành công rồi tải lại
+                                Swal.fire({
+                                    title: "Đã cập nhật",
+                                    text: "Đã cập nhật phí ship. Trang sẽ được tải lại...",
+                                    icon: "success",
+                                    timer: 2000, // Tự tắt sau 2 giây
+                                    showConfirmButton: false
+                                }).then((result) => {
+                                    location.reload(); // Tải lại trang để server tính toán
+                                });
+                            }
+                        },
+                        error: function () {
+                             Swal.fire("Lỗi", "Không thể kết nối đến server.", "error");
+                        }
+                    });
+                }
+            });
+
+            // --- SCRIPT CŨ: Load Tỉnh/Thành/Quận/Huyện ---
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm',function(data_tinh){
+                if(data_tinh.error==0){
+                    $.each(data_tinh.data, function (key_tinh,val_tinh) {
+                        $("#tinh").append('<option value="'+val_tinh.id+'">'+val_tinh.full_name+'</option>');
+                    });
+                    $("#tinh").change(function(e){
+                        var idtinh=$(this).val();
+                        //Lấy quận huyện
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/'+idtinh+'.htm',function(data_quan){
+                            if(data_quan.error==0){
+                                $("#quan").html('<option value="0">Chọn Quận Huyện</option>');
+                                $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+                                $.each(data_quan.data, function (key_quan,val_quan) {
+                                    $("#quan").append('<option value="'+val_quan.id+'">'+val_quan.full_name+'</option>');
+                                });
+                                //Lấy phường xã
+                                $("#quan").change(function(e){
+                                    var idquan=$(this).val();
+                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/'+idquan+'.htm',function(data_phuong){
+                                        if(data_phuong.error==0){
+                                            $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+                                            $.each(data_phuong.data, function (key_phuong,val_phuong) {
+                                                $("#phuong").append('<option value="'+val_phuong.id+'">'+val_phuong.full_name+'</option>');
+                                            });
+                                        }
+                                    });
+                                });
+
+                            }
+                        });
+                    });
+
+                }
+            });
+        });
+            $(document).ready(function () {
+
+            // ... (Các script khác của bạn có thể ở đây) ...
+
+            // Xử lý sự kiện click cho nút Bỏ chọn
+            $("#btn-remove-shipping").click(function () {
+
+                // Hiển thị hộp thoại xác nhận
+                Swal.fire({
+                    title: 'Bạn chắc chắn?',
+                    text: "Bạn muốn bỏ chọn phí vận chuyển này?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Nếu người dùng đồng ý, gọi AJAX
+                        $.ajax({
+                            type: "POST",
+                            // SỬA Ở ĐÂY: Gọi đến hàm "DeleteShipping" của bạn
+                            url: "@Url.Action("DeleteShipping", "Cart")",
+                            success: function (result) {
+                                if (result.success) { // Giả sử hàm của bạn trả về { success = true }
+                                    // Tải lại trang để xóa cookie và cập nhật giao diện
+                                    location.reload();
+                                }
+                            },
+                            error: function () {
+                                Swal.fire("Đã xảy ra lỗi khi xóa!");
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+}

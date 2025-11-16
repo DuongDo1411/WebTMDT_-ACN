@@ -1,0 +1,128 @@
+﻿@model IEnumerable<OrderDetails>
+@{
+    ViewData["Title"] = "Order Details";
+    decimal total = 0;
+
+    Paginate paper = new Paginate();
+    int pageNo = 0;
+    if (ViewBag.paper != null)
+    {
+        paper = ViewBag.paper;
+        pageNo = paper.CurrentPage;
+    }
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Order Details</title>
+</head>
+<body>
+    <h3>DANH SÁCH ĐƠN HÀNG</h3>
+    <div class="table table-responsive">
+        <table class="table" id="detail_order">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Order Code</th>
+                    <th>UserName</th>
+                    <th>Product Name</th>
+                    <th>Product Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int i = (paper.CurrentPage - 1) * paper.PageSize + 1;
+                    foreach (var item in Model.Where(m => m != null))
+                    {
+                        var subtotal = item.Quantity * item.Price;
+                        total += subtotal;
+
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.OrderCode</td>
+                            <td>@item.UserName</td>
+                            <td>@item.Product?.Name</td>
+                            <td>@item.Price.ToString("#,##0 VNĐ")</td>
+                            <td>@item.Quantity</td>
+                            <td>@subtotal.ToString("#,##0 VNĐ")</td>
+                        </tr>
+                        i++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-danger">
+                            Không có chi tiết đơn hàng nào để hiển thị.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                @if (Model != null && Model.Any())
+                {
+                    <input type="hidden" class="getId" value="@Model.First().OrderCode" />
+                    <tr>
+                        <td colspan="4"></td>
+                        <td><strong>Tổng: @total.ToString("#,##0 đ")</strong></td>
+                        <td><strong>Shipping: @ViewBag.ShippingCost.ToString("#,##0 đ")</strong></td>
+                        <td>
+                            @if (ViewBag.Status != 3)
+                            {
+                                <select class="form-control select-update-order">
+                                    <option value="1">Đơn hàng mới</option>
+                                    <option value="0">Đã xử lý</option>
+                                </select>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tfoot>
+        </table>
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#detail_order').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                ordering: true,
+                layout: {
+                    topStart: {
+                        buttons: ['print', 'pdf']
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.select-update-order').change(function () {
+                var status = $(this).val();
+                var ordercode = $('.getId').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateOrder")",
+                    data: { status: status, ordercode: ordercode },
+                    success: function (result) {
+                        if (result.success) {
+                            Swal.fire("Cập nhật đơn hàng thành công.");
+                        } else {
+                            Swal.fire("Cập nhật đơn hàng thất bại." + result.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

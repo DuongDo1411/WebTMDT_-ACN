@@ -1,0 +1,106 @@
+﻿@model CouponModel
+@{
+    ViewData["Title"] = "Chỉnh Sửa Mã Giảm Giá";
+}
+
+<style>
+    .ck-editor__editable {
+        min-height: 200px;
+    }
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Chỉnh Sửa Mã Giảm Giá</h3>
+    </div>
+    <div class="panel-body">
+
+        <form asp-action="Edit" autocomplete="off" asp-controller="Coupon" enctype="multipart/form-data">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="Name">Tên/Mã Giảm Giá (Coupon Code)</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Status">Trạng thái</label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="1">Hiển thị (Kích hoạt)</option>
+                            <option value="0">Ẩn (Chưa kích hoạt)</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Quantity">Số lượng</label>
+                        <input asp-for="Quantity" class="form-control" type="number" min="1" />
+                        <span asp-validation-for="Quantity" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="DateStart">Ngày bắt đầu</label>
+                        <input asp-for="DateStart" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="DateStart" class="text-danger" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="DateExpired">Ngày hết hạn</label>
+                        <input asp-for="DateExpired" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="DateExpired" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="Description">Mô tả (Điều kiện áp dụng)</label>
+                        <textarea id="editor" asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-save"></i> Cập nhật
+                </button>
+                <a asp-action="Index" asp-controller="Coupon" class="btn btn-default">
+                    <i class="fa fa-arrow-left"></i> Quay lại Danh sách
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+}

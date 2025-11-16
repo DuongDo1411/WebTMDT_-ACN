@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityRole>
+@{
+    ViewData["Title"] = "Role Management";
+    Paginate paper = new Paginate();
+    int pageNo = 0;
+    if (ViewBag.paper != null)
+    {
+        paper = ViewBag.paper;
+        pageNo = paper.CurrentPage;
+    }
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <h3>DANH SÁCH ROLE</h3>
+    <a class="btn btn-primary" asp-action="Create" asp-controller="Role">THÊM ROLE</a>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Tên Role</th>
+                @* <th scope="col">Role</th> *@
+                <th scope="col">Trạng thái</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = (paper.CurrentPage - 1) * paper.PageSize + 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                   
+                    <td>@i</td>
+                    <td>@item.Name</td>
+                    
+                    <td width="120">
+                        <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Role" asp-route-Id="@item.Id">Sửa</a>
+                        <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Role" asp-route-Id="@item.Id">Xóa</a>
+                    </td>
+
+                </tr>
+                { i++; }
+            }
+
+        </tbody>
+    </table>
+    @* <partial name="_Paging" model="paper" /> *@
+</body>
+</html>

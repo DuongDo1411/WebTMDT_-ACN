@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["title"] - Admin Dashboard</title>
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.5/css/buttons.dataTables.css">
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .admin-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar --- */
+        .admin-sidebar {
+            width: 250px;
+            min-width: 250px;
+            background: #343a40; /* Màu tối cho sidebar */
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .admin-sidebar-header {
+            padding: 20px;
+            background: #212529;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+            .admin-sidebar-header a {
+                color: #fff;
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+        .admin-sidebar .nav-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+            .admin-sidebar .nav-list li a {
+                display: block;
+                padding: 15px 20px;
+                color: #adb5bd; /* Màu chữ menu */
+                text-decoration: none;
+                border-left: 3px solid transparent;
+                transition: all 0.2s;
+            }
+
+                .admin-sidebar .nav-list li a:hover {
+                    background: #495057;
+                    color: #fff;
+                    border-left-color: #007bff; /* Màu highlight khi hover */
+                }
+
+                .admin-sidebar .nav-list li a.active { /* Thêm class active nếu cần */
+                    background: #495057;
+                    color: #fff;
+                    font-weight: 500;
+                }
+
+        /* --- Main Content --- */
+        .admin-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .admin-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+            .admin-content-header h1 {
+                margin: 0;
+                font-size: 1.75rem;
+                color: #343a40;
+            }
+
+        .main-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+    </style>
+
+    <link rel="shortcut icon" href="images/ico/favicon.ico">
+</head>
+<body>
+
+    <div class="admin-wrapper">
+        <nav class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <a asp-area="" asp-controller="Home" asp-action="Index">Admin Dashboard</a>
+            </div>
+
+            <ul class="nav-list">
+                <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+                <li><a asp-controller="Product"><i class="fa fa-shopping-cart"></i> Products</a></li>
+                <li><a asp-controller="Category"><i class="fa fa-tags"></i> Categories</a></li>
+                <li><a asp-controller="Brand"><i class="fa fa-diamond"></i> Brands</a></li>
+                <li><a asp-controller="Order" asp-action="Index"><i class="fa fa-list-alt"></i> Orders</a></li>
+                <li><a asp-controller="User" asp-action="Index"><i class="fa fa-users"></i> Users</a></li>
+                <li><a asp-controller="Role" asp-action="Index"><i class="fa fa-key"></i> Roles</a></li>
+                <li><a asp-controller="Slider" asp-action="Index"><i class="fa fa-sliders"></i> Sliders</a></li>
+                <li><a asp-controller="Shipping" asp-action="Index"><i class="fa fa-truck"></i> Shippings</a></li>
+                <li><a asp-controller="Dashboard" asp-action="Index"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                @* <li><a asp-controller="Coupon" asp-action="Index"><i class="fa fa-truck"></i> Coupons</a></li> *@
+            </ul>
+        </nav>
+
+        <div class="admin-content">
+
+            <div class="admin-content-header">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+
+            <div class="main-panel">
+                @Html.Partial("_NotificationPartial")
+                @RenderBody()
+            </div>
+
+            <footer class="text-center" style="margin-top: 20px; color: #888;">
+                &copy; @DateTime.Now.Year - My Admin Dashboard
+            </footer>
+        </div>
+    </div>
+
+
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.5/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.5/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.5/js/buttons.print.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="~/backend/js/site.js"></script>
+
+    <script>
+        $(function () {
+            var message = '@TempData["success"]';
+            if (message != '') {
+                Swal.fire({
+                    title: message,
+                    icon: "success",
+                    draggable: true
+                });
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            let table = new DataTable('#myTable', {
+                layout: {
+                    topStart: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    }
+                },
+                responsive: true // Thêm tính năng responsive
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

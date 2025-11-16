@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "User Management";
+
+}
+<h3>DANH SÁCH USER</h3>
+<a class="btn btn-primary" asp-action="Create" asp-controller="User">THÊM NGƯỜI DÙNG</a>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th scope="col">STT</th>
+            <th scope="col">UserName</th>
+            <th scope="col">Email</th>
+            <th scope="col">PasswordHash</th>
+            <th scope="col">SĐT</th>
+            <th scope="col">Role</th>
+            <th scope="col">Thao tác</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 1;
+        }
+        @foreach (var usersWithRoles in Model)
+        {
+            <tr>
+                @* <th scope="row">@item.Id</th> *@
+                <td>@i</td>
+                <td>@usersWithRoles.User.UserName</td>
+                <td>@usersWithRoles.User.Email</td>
+                <td>@usersWithRoles.User.PasswordHash</td>
+                <td>@usersWithRoles.User.PhoneNumber</td>
+                <td>
+                    @usersWithRoles.RoleName
+                </td>
+                <td width="120">
+                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Sửa</a>
+                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Xóa</a>
+                </td>
+
+            </tr>
+            { i++; }
+        }
+
+    </tbody>
+</table>

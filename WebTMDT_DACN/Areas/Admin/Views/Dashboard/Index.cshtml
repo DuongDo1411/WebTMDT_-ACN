@@ -1,0 +1,167 @@
+﻿@model IEnumerable<BrandModel>
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+    /* Thẻ thống kê (Stats Card) */
+    .dashboard-stat-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+        /* Icon bên trái */
+        .dashboard-stat-card .stat-icon {
+            font-size: 2.5rem; /* Kích thước icon */
+            padding: 20px;
+            border-radius: 50%;
+            color: #fff;
+            margin-right: 20px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Thông tin (Số và chữ) */
+        .dashboard-stat-card .stat-info h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .dashboard-stat-card .stat-info p {
+            font-size: 1rem;
+            color: #777;
+            margin: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+    /* Màu sắc cho các thẻ */
+    .color-1 .stat-icon {
+        background: #00c0ef;
+    }
+    /* Xanh dương (Info) */
+    .color-2 .stat-icon {
+        background: #00a65a;
+    }
+    /* Xanh lá (Success) */
+    .color-3 .stat-icon {
+        background: #f39c12;
+    }
+    /* Vàng (Warning) */
+    .color-4 .stat-icon {
+        background: #dd4b39;
+    }
+    /* Đỏ (Danger) */
+</style>
+
+<h3>Dashboard</h3>
+<hr />
+
+<div class="row">
+
+    <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat-card color-1">
+            <div class="stat-icon"><i class="fa fa-product-hunt"></i></div>
+            <div class="stat-info">
+                <h3>@ViewBag.CountProduct</h3>
+                <p>Sản phẩm</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat-card color-2">
+            <div class="stat-icon"><i class="fa fa-shopping-cart"></i></div>
+            <div class="stat-info">
+                <h3>@ViewBag.CountOrder</h3>
+                <p>Đơn hàng</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat-card color-3">
+            <div class="stat-icon"><i class="fa fa-sitemap"></i></div>
+            <div class="stat-info">
+                <h3>@ViewBag.CountCategory</h3>
+                <p>Danh mục</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <div class="dashboard-stat-card color-4">
+            <div class="stat-icon"><i class="fa fa-users"></i></div>
+            <div class="stat-info">
+                <h3>@ViewBag.CountUser</h3>
+                <p>Người dùng</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-chart-line"></i> Thống Kê Doanh Thu
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div id="myfirstchart" style="height: 250px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "@Url.Action("GetChartData", "Dashboard")",
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    // Process the retrieved data
+                    var chartData = data.map(function (item) {
+                        return {
+                            date: item.date,
+                            sold: item.sold,
+                            quantity: item.quantity,
+                            revenue: item.revenue,
+                            profit: item.profit
+                        };
+                    });
+                    //Chart Morris
+                    new Morris.Line({
+                        element: 'myfirstchart',
+                        data: chartData,
+                        xkey: 'date',
+                        xLabelFormat: function (x) {
+                            return new Date(x).toLocaleDateString();
+                        },
+                        ykeys: ['sold', 'quantity', 'revenue', 'profit'],
+                        labels: ["Đơn hàng", "Số lượng bán ra", "Doanh thu", "Lợi nhuận"],
+                        lineColors: ['#00a65a', '#f39c12', '#00c0ef', '#dd4b39'], // Thêm màu cho đẹp
+                        resize: true
+                    });
+                },
+                error: function (error) {
+                    console.error("Error fetching data:", error);
+                    $('#myfirstchart').html('<p class="text-danger text-center">Không thể tải dữ liệu biểu đồ.</p>');
+                }
+            });
+        });
+    </script>
+}

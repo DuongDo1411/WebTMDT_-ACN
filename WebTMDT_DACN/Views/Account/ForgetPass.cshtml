@@ -1,0 +1,148 @@
+﻿@model AppUserModel
+@{
+    ViewData["Title"] = "Quên mật khẩu";
+}
+
+<style>
+    .login-page-section {
+        background: #f9f9f9; /* Nền xám nhạt */
+        padding: 60px 0;
+    }
+
+    .login-form-container {
+        background: #fff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+        .login-form-container h2 {
+            text-align: center;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+    .form-group label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .input-group-addon {
+        background: #f7f7f7;
+        border: 1px solid #ddd;
+        border-right: none;
+        color: var(--primary-color);
+        border-radius: 5px 0 0 5px;
+        padding: 6px 15px;
+    }
+
+    .input-group .form-control {
+        border-radius: 0 5px 5px 0 !important;
+        height: 45px;
+        box-shadow: none;
+        border-color: #ddd;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 5px rgba(254, 152, 15, 0.5);
+        z-index: 2;
+    }
+
+    /* Nút Đăng nhập (Call-to-Action) */
+    .btn-login {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        background: var(--primary-color);
+        border: none;
+        color: #fff;
+        border-radius: 5px;
+        transition: background 0.2s ease;
+    }
+
+        .btn-login:hover {
+            background: #e6890e;
+            color: #fff;
+        }
+
+    /* Link "Quên mật khẩu" */
+    .forgot-password-link {
+        text-align: right;
+        display: block;
+        margin-top: -10px; /* Kéo lên 1 chút */
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+        .forgot-password-link a {
+            color: #777;
+        }
+
+            .forgot-password-link a:hover {
+                color: var(--primary-color);
+            }
+
+    /* Link Đăng ký */
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 1rem;
+    }
+
+        .register-link a {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+    .form-group .text-danger {
+        display: block;
+        margin-top: 5px;
+    }
+</style>
+
+<section id="form" class="login-page-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+
+                <div class="login-form-container">
+                    <h2>Quên mật khẩu</h2>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <form asp-action="SendMailForgotPass" asp-controller="Account" method="post">
+
+                        <div class="form-group">
+                            <label asp-for="Email">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input asp-for="Email" class="form-control" placeholder="Nhập Email của bạn" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger" />
+                        </div>
+
+                        
+
+                        <button type="submit" class="btn btn-login">Gửi</button>
+                    </form>
+
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

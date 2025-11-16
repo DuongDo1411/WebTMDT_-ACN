@@ -1,0 +1,65 @@
+﻿@model SliderModel;
+@{
+    ViewData["Title"] = "Edit Slider";
+}
+<h4>THÊM SLIDE<h4>
+        <div class="col-md-9">
+            <form asp-action="Edit" asp-controller="Slider" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label>Tên Slide</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger" />
+                </div>
+
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select asp-for="Status" class="form-control">
+                        @if(@Model.Status == 1)
+                        {
+                            <option value="1" selected>Hiển thị</option>
+                            <option value="0">Ẩn</option>
+                        }
+                        else
+                        {
+                            <option value="1">Hiển thị</option>
+                            <option value="0" selected>Ẩn</option>
+                        }
+                        
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label>Image</label>
+                    <input asp-for="ImageUpload" class="form-control-file" />
+                    <span asp-validation-for="ImageUpload" class="text-danger" />
+                    <td>
+                        <img src="~/media/products/@Model.Image" width="120" height="150px">
+                    </td>
+                    <img id="imgpreview" class="pt-2" />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary">Update</button>
+                </div>
+            </form>
+            <a asp-action="Index">Back to List Slider</a>
+        </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+            <script>
+                    $("#ImageUpload").change(function(){
+                        readURL(this);
+                    })
+                <script>
+                    CKEDITOR.replace('Description');
+            </script>
+}

@@ -1,0 +1,316 @@
+﻿@model IEnumerable<ProductModel>
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="_SliderPartial" />
+
+<style>
+    .features_items .title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+        .features_items .title:after {
+            content: " ";
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: #e5e5e5;
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+        }
+
+    /* Thẻ sản phẩm mới */
+    .product-card {
+        background: #ffffff;
+        border: 1px solid #f0f0f0;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border-radius: 5px;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .product-card .productinfo {
+            padding: 20px;
+            position: relative;
+            background: #fff;
+            height: 100%; /* Giúp định nghĩa chiều cao cho overlay */
+        }
+
+            .product-card .productinfo img {
+                width: 100%;
+                height: 250px;
+                object-fit: cover;
+                margin-bottom: 20px;
+            }
+
+            .product-card .productinfo h2 {
+                font-size: 1.5rem;
+                color: var(--primary-color);
+                font-weight: 700;
+                margin-top: 0;
+            }
+
+            .product-card .productinfo p {
+                font-size: 1rem;
+                color: #555;
+                font-weight: 400;
+                margin-bottom: 0;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-height: 48px;
+            }
+
+    /* --- HIỆU ỨNG OVERLAY MỚI: TRƯỢT LÊN TỪ DƯỚI --- */
+    .product-overlay {
+        position: absolute;
+        bottom: 0; /* Bắt đầu từ dưới */
+        left: 0;
+        width: 100%;
+        height: 0; /* Ban đầu ẩn hoàn toàn (chiều cao = 0) */
+        /* Gradient màu đen mờ dần từ dưới lên */
+        background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+        display: flex;
+        align-items: flex-end; /* Căn chỉnh nội dung xuống dưới */
+        justify-content: center;
+        transition: all 0.3s ease-in-out; /* Hiệu ứng trượt mượt mà */
+        pointer-events: none; /* Vẫn cho phép click xuyên qua */
+
+        padding-bottom: 10px; /* Thêm padding cho nội dung */
+    }
+
+    .product-card:hover .product-overlay {
+        height: 100%; /* Khi hover, hiện ra toàn bộ chiều cao */
+    }
+
+    .overlay-content {
+        text-align: center;
+        pointer-events: auto; /* Bắt click cho các nút */
+        width: 100%; /* Chiếm toàn bộ chiều rộng overlay */
+        padding: 0 15px; /* Giới hạn padding để không chạm mép */
+        transform: translateY(100%); /* Ban đầu ẩn xuống dưới */
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .product-card:hover .overlay-content {
+        transform: translateY(0); /* Trượt lên khi hover */
+    }
+
+
+    /* Nút "Thêm vào giỏ" */
+    .overlay-content .btn-default {
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 8px 15px; /* Tăng padding nút */
+        border-radius: 4px; /* Bo góc nút */
+    }
+
+        .overlay-content .btn-default:hover {
+            background: #e6890e;
+        }
+
+    .overlay-buttons {
+        margin-top: 15px;
+        display: flex; /* Dùng flexbox để các nút nằm ngang */
+        justify-content: center; /* Căn giữa các nút */
+        gap: 10px; /* Khoảng cách giữa các nút */
+    }
+
+        .overlay-buttons .btn-link {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.5); /* Thêm viền trắng mờ */
+            color: #fff; /* Chữ trắng */
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+            .overlay-buttons .btn-link:hover {
+                color: var(--primary-color);
+                background: #fff; /* Nền trắng khi hover */
+                border-color: var(--primary-color);
+            }
+
+</style>
+
+<div class="col-sm-3">
+    <partial name="_SidebarPartial" />
+</div>
+
+<div class="col-sm-9 padding-right">
+    @{
+        var currentUrl = Url.ActionContext.HttpContext.Request.Path;
+    }
+    <div class="row" style="margin-bottom: 20px; border-bottom: 1px solid #e5e5e5; padding-bottom: 15px;">
+        <div class="col-sm-4">
+            <h5 style="margin-top: 5px;">Sắp xếp theo</h5>
+            <select class="form-control" id="sort_by" style="width: auto;">
+                <option value="">---------</option>
+                <option value="@currentUrl?sort_by=price_increase">Giá tăng dần</option>
+                <option value="@currentUrl?sort_by=price_decrease">Giá giảm dần</option>
+                <option value="@currentUrl?sort_by=newest">Mới nhất</option>
+                <option value="@currentUrl?sort_by=oldest">Cũ nhất</option>
+            </select>
+        </div>
+    </div>
+    <div class="features_items">
+        <h2 class="title text-center">Features Items</h2>
+
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-4">
+                <div class="product-card">
+                    <div class="single-products">
+
+                        <div class="productinfo text-center">
+                            <a asp-action="Details" asp-controller="Product" asp-route-Id="@item.Id">
+                                <img src="~/media/products/@item.Image" alt="@item.Name" />
+                                <h2>@item.Price.ToString("#,##0 VNĐ")</h2>
+                                <p>@item.Name</p>
+                            </a>
+                        </div>
+
+                        @* CẤU TRÚC OVERLAY MỚI *@
+                        <div class="product-overlay">
+                            <div class="overlay-content">
+                                @if (@item.Quantity > 0)
+                                {
+                                    <button class="btn btn-default add-to-cart" data-product_id="@item.Id">
+                                        <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-default" disabled>
+                                        <i class="fa fa-shopping-cart"></i> Hết hàng
+                                    </button>
+                                }
+
+                                @if (User.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <div class="overlay-buttons">
+                                        <button class="btn btn-link add-btn-wishlist" data-product_id="@item.Id">
+                                            <i class="fa fa-heart"></i> Yêu thích
+                                        </button>
+                                        <button class="btn btn-link add-btn-compare" data-product_id="@item.Id">
+                                            <i class="fa fa-exchange"></i> So sánh
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('.add-to-cart').click(function () {
+            var Id = $(this).data("product_id");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Add", "Cart")",
+                data: { Id: Id },
+                success: function (result) {
+                    if (result) {
+                        // NÂNG CẤP SWEETALERT
+                        Swal.fire({
+                            title: "Thành công!",
+                            text: "Đã thêm sản phẩm vào giỏ hàng.",
+                            icon: "success",
+                            showCancelButton: true,
+                            confirmButtonColor: "#FE980F", // Màu cam của theme
+                            confirmButtonText: "Xem giỏ hàng",
+                            cancelButtonText: "Tiếp tục mua sắm"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Nếu người dùng bấm "Xem giỏ hàng"
+                                window.location.href = '@Url.Action("Index", "Cart")';
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('.add-btn-wishlist').click(function () {
+            var Id = $(this).data("product_id");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddWishlist", "Home")",
+                data: { Id: Id },
+                success: function (result) {
+                    if (result) {
+                        // NÂNG CẤP SWEETALERT (tự động tắt)
+                        Swal.fire({
+                            title: "Đã thêm!",
+                            text: "Sản phẩm đã được thêm vào danh sách yêu thích.",
+                            icon: "success",
+                            timer: 2000, // Tự tắt sau 2 giây
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('.add-btn-compare').click(function () {
+            var Id = $(this).data("product_id");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddCompare", "Home")",
+                data: { Id: Id },
+                success: function (result) {
+                    if (result) {
+                        // NÂNG CẤP SWEETALERT (tự động tắt)
+                        Swal.fire({
+                            title: "Đã thêm!",
+                            text: "Sản phẩm đã được thêm vào danh sách so sánh.",
+                            icon: "success",
+                            timer: 2000, // Tự tắt sau 2 giây
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#sort_by').change(function () {
+                var selectedValue = $(this).val();
+
+                // Nếu chọn một tùy chọn hợp lệ
+                if (selectedValue) {
+                    // Chuyển hướng trình duyệt đến URL mới
+                    window.location.href = selectedValue;
+                }
+            });
+        });
+    </script>
+}

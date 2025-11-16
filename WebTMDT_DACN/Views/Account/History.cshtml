@@ -1,0 +1,221 @@
+﻿@model IEnumerable<OrderModel>
+@{
+    ViewData["Title"] = "Lịch sử đặt hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // <-- TÍCH HỢP VÀO LAYOUT
+
+    Paginate paper = new Paginate();
+    int pageNo = 0;
+    if (ViewBag.paper != null)
+    {
+        paper = ViewBag.paper;
+        pageNo = paper.CurrentPage;
+    }
+    int i = (paper.CurrentPage - 1) * paper.PageSize + 1;
+}
+
+<style>
+    /* Nền chung của trang */
+    .history-page-section {
+        background: #f9f9f9;
+        padding: 40px 0;
+    }
+
+        /* Tiêu đề */
+        .history-page-section .title {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .history-page-section .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+    /* Bọc Bảng */
+    .history-table-container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    /* Tùy chỉnh Bảng */
+    .table.history-table thead th {
+        font-weight: 700;
+        color: #333;
+        background: #f7f7f7;
+        vertical-align: middle;
+        border-bottom-width: 2px;
+    }
+
+    .table.history-table tbody td {
+        vertical-align: middle !important;
+        color: #555;
+    }
+
+    .table.history-table tbody tr:hover {
+        background: #fcfcfc;
+    }
+
+    /* BADGE (NHÃN) CHO TRẠNG THÁI */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-new {
+        background: #5cb85c;
+    }
+    /* Xanh lá */
+    .status-processed {
+        background: #337ab7;
+    }
+    /* Xanh dương */
+    .status-cancelled {
+        background: #d9534f;
+    }
+    /* Đỏ */
+
+    /* Căn giữa Phân Trang */
+    .pagination-container {
+        text-align: center;
+        margin-top: 30px;
+    }
+</style>
+
+<section class="history-page-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="title text-center">LỊCH SỬ ĐẶT HÀNG</h2>
+                <p class="subtitle">Tài khoản: @ViewBag.UserEmail</p>
+
+                <div class="history-table-container">
+
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover history-table" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Phí Ship</th>
+                                        <th>Thời gian đặt</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@i</td>
+                                            <td><strong>@item.OrderCode</strong></td>
+                                            <td>@item.ShippingCost.ToString("#,##0 VNĐ")</td>
+                                            <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                @if (@item.Status == 1)
+                                                {
+                                                    <span class="status-badge status-new">Đơn hàng mới</span>
+                                                }
+                                                else if (@item.Status == 2)
+                                                {
+                                                    <span class="status-badge status-processed">Đã xử lý</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="status-badge status-cancelled">Đơn hàng đã hủy</span>
+                                                }
+                                            </td>
+                                            <td style="width: 120px;">
+                                                @if (@item.Status == 1)
+                                                {
+                                                    <a asp-action="CancelOrder" class="btn btn-warning btn-sm confirm-cancellation" asp-controller="Account" asp-route-ordercode="@item.OrderCode">
+                                                        <i class="fa fa-times"></i> Hủy đơn
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center" style="padding: 40px;">
+                            <h4>Bạn chưa có đơn hàng nào.</h4>
+                        </div>
+                    }
+
+                    @if (paper.TotalPages > 1)
+                    {
+                        <div class="pagination-container">
+                            <ul class="pagination">
+                                @if (paper.CurrentPage > 1)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("History", "Account", new { page = paper.CurrentPage - 1 })" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @for (int p = 1; p <= paper.TotalPages; p++)
+                                {
+                                    <li class="@(p == paper.CurrentPage ? "active" : "")">
+                                        <a href="@Url.Action("History", "Account", new { page = p })">@p</a>
+                                    </li>
+                                }
+
+                                @if (paper.CurrentPage < paper.TotalPages)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("History", "Account", new { page = paper.CurrentPage + 1 })" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $('.confirm-cancellation').click(function(e) {
+            e.preventDefault(); // Ngăn link điều hướng ngay lập tức
+            var link = $(this).attr('href');
+
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn muốn hủy đơn hàng này? Hành động này không thể hoàn tác.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Vâng, Hủy Đơn!',
+                cancelButtonText: 'Giữ lại'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = link;
+                }
+            });
+        });
+    </script>
+}

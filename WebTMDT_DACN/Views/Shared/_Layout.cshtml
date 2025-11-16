@@ -1,0 +1,424 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>@ViewData["title"] | E-Shopper</title>
+
+	<link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link href="~/css/prettyPhoto.css" rel="stylesheet">
+	<link href="~/css/price-range.css" rel="stylesheet">
+	<link href="~/css/animate.css" rel="stylesheet">
+
+	<link href="~/css/main.css" rel="stylesheet">
+	<link href="~/css/responsive.css" rel="stylesheet">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+	<link rel="shortcut icon" href="images/ico/favicon.ico">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+
+	<style>
+		:root {
+			--primary-color: #FE980F; /* Màu cam chủ đạo của E-shopper */
+			--dark-bg: #222222;
+			--light-text: #ccc;
+			--dark-text: #333;
+		}
+
+		body {
+			font-family: 'Lato', sans-serif; /* <-- Phông chữ mới */
+			background-color: #f9f9f9; /* <-- Nền sáng, sạch sẽ */
+		}
+
+		/* --- Header --- */
+		#header {
+			box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+		}
+
+			#header .header_top {
+				background: #f0f0f0;
+				border-bottom: 1px solid #e0e0e0;
+			}
+
+				#header .header_top .contactinfo ul li a,
+				#header .header_top .social-icons ul li a {
+					color: #666;
+				}
+
+					#header .header_top .social-icons ul li a:hover {
+						background: var(--primary-color);
+						color: #fff;
+					}
+
+			#header .header-middle {
+				background: #ffffff;
+				padding-bottom: 20px;
+				padding-top: 20px;
+			}
+
+			#header .header-bottom {
+				background: var(--dark-bg); /* <-- Nền tối cho menu */
+			}
+
+		.shop-menu ul li a {
+			background: none;
+			color: #555;
+			font-weight: 700;
+		}
+
+			.shop-menu ul li a:hover {
+				color: var(--primary-color);
+			}
+
+			.shop-menu ul li a i.fa {
+				color: var(--primary-color); /* <-- Icon màu cam */
+				margin-right: 5px;
+			}
+
+		.mainmenu ul li a {
+			color: var(--light-text); /* <-- Chữ trắng trên nền tối */
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+			.mainmenu ul li a:hover, .mainmenu ul li a.active {
+				color: var(--primary-color);
+				background: none;
+			}
+
+		/* Cải thiện thanh Search */
+		.search_box {
+			display: flex;
+		}
+
+			.search_box input {
+				border: none;
+				border-radius: 20px 0 0 20px !important;
+				padding-left: 20px;
+				background: #444; /* <-- Nền tối cho ô search */
+				color: #fff;
+			}
+
+			.search_box button {
+				border-radius: 0 20px 20px 0 !important;
+				border: none;
+				background: var(--primary-color);
+				color: #fff;
+			}
+
+		/* --- Nội dung chính --- */
+		section {
+			padding: 40px 0;
+		}
+
+		/* --- Footer (Phần quan trọng) --- */
+		#footer {
+			background: var(--dark-bg);
+			color: var(--light-text);
+		}
+
+		.footer-widget {
+			padding: 60px 0;
+			border-top: 1px solid #333;
+		}
+
+		.single-widget h2 {
+			color: #fff;
+			font-size: 18px;
+			font-weight: 700;
+			text-transform: uppercase;
+			margin-bottom: 25px;
+			letter-spacing: 1px;
+		}
+
+			.single-widget h2::after { /* Thêm đường gạch chân nhỏ */
+				content: '';
+				display: block;
+				width: 40px;
+				height: 2px;
+				background: var(--primary-color);
+				margin-top: 10px;
+			}
+
+		.single-widget ul li a {
+			color: var(--light-text);
+			padding: 5px 0;
+			transition: all 0.2s ease;
+		}
+
+			.single-widget ul li a:hover {
+				color: var(--primary-color);
+				background: none;
+				padding-left: 5px; /* Hiệu ứng thụt vào khi hover */
+			}
+
+			.single-widget ul li a i.fa {
+				margin-right: 10px;
+			}
+
+		/* Form Newsletter */
+		.searchform input {
+			background: #333;
+			border: none;
+			color: #fff;
+			padding: 10px;
+			width: 100%;
+			margin-bottom: 10px;
+			border-radius: 5px;
+		}
+
+		.searchform button {
+			background: var(--primary-color);
+			border: none;
+			color: #fff;
+			font-weight: 700;
+			border-radius: 5px;
+			padding: 10px 20px;
+		}
+
+		.searchform p {
+			margin-top: 15px;
+		}
+
+		.footer-bottom {
+			background: #111; /* Nền tối hơn cho copyright */
+			padding: 15px 0;
+		}
+
+	</style>
+
+</head>
+<body>
+	<header id="header">
+		<div class="header_top">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="contactinfo">
+							<ul class="nav nav-pills">
+								<li><a href="#"><i class="fa fa-phone"></i> +2 95 01 88 821</a></li>
+								<li><a href="#"><i class="fa fa-envelope"></i> info@domain.com</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="social-icons pull-right">
+							<ul class="nav navbar-nav">
+								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+								<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><div class="header-middle">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="logo pull-left">
+							<a href="index.html"><img src="images/home/logo.png" alt="" /></a>
+						</div>
+					</div>
+					<div class="col-sm-8">
+						<div class="shop-menu pull-right">
+							<ul class="nav navbar-nav">
+								@if (User.Identity?.IsAuthenticated ?? false)
+								{
+									<li><a asp-action="Wishlist" asp-controller="Home"><i class="fa fa-star"></i> Wishlist</a></li>
+									<li><a asp-action="Compare" asp-controller="Home"><i class="fa fa-exchange"></i> Compare</a></li>
+									<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+									<li><a asp-action="Checkout" asp-controller="Cart"><i class="fa fa-crosshairs"></i> Checkout</a></li>
+									<li class="dropdown">
+										<a style="cursor:pointer"  class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle"></i> User <span class="caret"></span></a>
+										<ul class="dropdown-menu">
+											<li><a asp-action="UpdateAccount" asp-controller="Account"><i class="fa fa-user"></i>Account Info</a></li>
+											<li><a asp-action="History" asp-controller="Account"><i class="fa fa-history"></i>Orders History</a></li>
+										</ul>
+									</li>
+									
+									@if (User.IsInRole("ADMIN"))
+									{
+										<li><a asp-controller="Product" asp-action="Index" asp-area="Admin"><i class="fa fa-lock"></i>Admin CMS</a></li>
+									}
+									<li><a><i class="fa fa-user"></i>Xin chào , @User.Identity.Name</a></li>
+									<li><a asp-controller="Account" asp-action="Logout"><i class="fa fa-sign-out"></i>Logout</a></li>
+								}
+								else
+								{
+									<li><a asp-controller="Account" asp-action="Login"><i class="fa fa-sign-in"></i> Login</a></li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><div class="header-bottom">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+						</div>
+						<div class="mainmenu pull-left">
+							<ul class="nav navbar-nav collapse navbar-collapse">
+								<li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
+								<li class="dropdown">
+									<a asp-controller="Product">Shop<i class="fa fa-angle-down"></i></a>
+									<ul role="menu" class="sub-menu">
+										<li><a asp-controller="Category">Categories</a></li>
+										<li><a asp-controller="Product" asp-action="Details">Product Details</a></li>
+										<li><a asp-controller="Cart" asp-action="Checkout">Checkout</a></li>
+										<li><a asp-controller="Cart">Cart</a></li>
+									</ul>
+								</li>
+								<li class="dropdown">
+									<a href="#">Blog<i class="fa fa-angle-down"></i></a>
+									<ul role="menu" class="sub-menu">
+										<li><a href="blog.html">Blog List</a></li>
+										<li><a href="blog-single.html">Blog Single</a></li>
+									</ul>
+								</li>
+
+								<li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<form asp-controller="Product" asp-action="Search" method="post">
+							<div class="search_box pull-right">
+								<input type="text" placeholder="Tìm kiếm sản phẩm..." name="searchTerm" />
+								<button class="btn btn-warning" type="submit"><i class="fa fa-search"></i></button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<section>
+		<div class="container">
+			<div class="row">
+				<partial name="_NotificationPartial" />
+				@RenderBody()
+			</div>
+		</div>
+	</section>
+
+	<footer id="footer">
+		<div class="footer-widget">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>Service</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="#">Online Help</a></li>
+								<li><a href="#">Contact Us</a></li>
+								<li><a href="#">Order Status</a></li>
+								<li><a href="#">Change Location</a></li>
+								<li><a href="#">FAQ’s</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>Quock Shop</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="#">T-Shirt</a></li>
+								<li><a href="#">Mens</a></li>
+								<li><a href="#">Womens</a></li>
+								<li><a href="#">Gift Cards</a></li>
+								<li><a href="#">Shoes</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>Policies</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="#">Terms of Use</a></li>
+								<li><a href="#">Privecy Policy</a></li>
+								<li><a href="#">Refund Policy</a></li>
+								<li><a href="#">Billing System</a></li>
+								<li><a href="#">Ticket System</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>About Shopper</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="#">Company Information</a></li>
+								<li><a href="#">Careers</a></li>
+								<li><a href="#">Store Location</a></li>
+								<li><a href="#">Affillate Program</a></li>
+								<li><a href="#">Copyright</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-3 col-sm-offset-1">
+						<div class="single-widget">
+							<h2>Newsletter</h2>
+							<form action="#" class="searchform">
+								<input type="text" placeholder="Your email address" />
+								<button type="submit" class="btn btn-default">Subscribe</button>
+								<p>Get the most recent updates from <br />our site and be updated your self...</p>
+							</form>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="footer-bottom">
+			<div class="container">
+				<div class="row">
+					<p class="pull-left">Copyright © 2025 E-SHOPPER Inc. All rights reserved.</p>
+					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+				</div>
+			</div>
+		</div>
+
+	</footer>
+	<script src="~/js/jquery.js"></script>
+	<script src="~/js/bootstrap.min.js"></script>
+	<script src="~/js/jquery.scrollUp.min.js"></script>
+	<script src="~/js/price-range.js"></script>
+	<script src="~/js/jquery.prettyPhoto.js"></script>
+	<script src="~/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+	<script>
+		$(function () {
+			var message = '@TempData["success"]';
+			if(message != '')
+				Swal.fire({
+					title: message,
+					icon: "success",
+					draggable: true
+				});
+		});
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
