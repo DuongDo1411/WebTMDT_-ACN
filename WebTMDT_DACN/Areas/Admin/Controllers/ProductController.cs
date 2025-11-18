@@ -188,7 +188,7 @@ namespace WebTMDT_DACN.Areas.Admin.Controllers
 
             return View(product);
         }
-        public async Task<IActionResult> Delete(int Id)
+        public async Task<IActionResult> Delete(long Id)
         {
             ProductModel product = await _datacontext.Products.FindAsync(Id);
             if (product == null)

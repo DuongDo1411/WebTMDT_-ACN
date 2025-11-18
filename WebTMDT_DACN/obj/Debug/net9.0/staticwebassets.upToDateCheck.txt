@@ -6,16 +6,27 @@ wwwroot\css\main.css
 wwwroot\css\prettyPhoto.css
 wwwroot\css\price-range.css
 wwwroot\css\responsive.css
+wwwroot\data\vietnam-provinces.json
 wwwroot\favicon.ico
+wwwroot\images\1-1.png
+wwwroot\images\303-mz-v9p1t0bw.png
+wwwroot\images\6a4a9250679050818495017601ae0d63.jpg
 wwwroot\images\9efdb0b5-39c3-452c-b810-a7c47aa0e281_ec3a03bec2e04fbe16f1.jpg
 wwwroot\images\9f4e5051-578e-4a47-94d0-1e3a794419e1_07a808a716dc9b82c2cd.jpg
 wwwroot\images\Acer-Nitro-5-2020-i5-10300H-GTX-1650-01.jpg
 wwwroot\images\Acer-Nitro-V-2025.jpeg
+wwwroot\images\Acer_Aspire_7_Gaming_A715_59_G_1_8776bc6007.png
+wwwroot\images\acer_predator_helios_neo16.jpg
 wwwroot\images\black-myth-wukong-banner.jpg
 wwwroot\images\boPC.jpg
+wwwroot\images\g502-wl_90b9c6603d0e4df7a1793277d000a34f_50ebcae598e34df3ad8b1efc04e46eb0_master.jpg
+wwwroot\images\laptop-gaming-asus-2023-header-desktop.png
+wwwroot\images\laptopgamingdohoah22_1280x720-800-resize.jpg
+wwwroot\images\laptop_gaming_be5dafa4f904483fb5796a72d0750715_master.jpg
 wwwroot\images\lenovo.jpg
 wwwroot\images\macbook1.jpg
 wwwroot\images\T1.jpg
+wwwroot\images\text_d_i_7_93.png
 wwwroot\js\bootstrap.min.js
 wwwroot\js\contact.js
 wwwroot\js\gmaps.js
@@ -86,18 +97,24 @@ wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\media\products\07d4629e-dbb6-4f62-a779-eb7f981de5ac_rintaro tsumugi.jpg
-wwwroot\media\products\1d35b988-4c6d-4241-a0b6-543ec65e82d9_boPC.jpg
+wwwroot\media\products\39985fa1-d8ac-4534-b11e-b6b7a896ae7d_acer_predator_helios_neo16.jpg
 wwwroot\media\products\3b33a443-14b6-4a42-a3e8-4f71915192c6_kdksIds.png
 wwwroot\media\products\5292ddf6-9969-458e-818b-aac33d444479_Acer-Nitro-5-2020-i5-10300H-GTX-1650-01.jpg
 wwwroot\media\products\ac1f9f82-e383-4cc2-a2e1-1cbe4fe17609_mywaifu.jpg
-wwwroot\media\products\bad2e008-f313-4eb3-8c57-23ae56e217cb_rintaro tsumugi.jpg
+wwwroot\media\products\b1871ea7-7c19-4f47-ada5-f9df139fe042_text_d_i_7_93.png
+wwwroot\media\products\bceab188-e3f4-46e3-9ff2-ae1c4f3db389_303-mz-v9p1t0bw.png
+wwwroot\media\products\cb5a9d8c-123c-44ec-bedd-22e357d082ac_1-1.png
+wwwroot\media\products\da99d3f7-fb1a-41a3-ab12-ef897081665b_g502-wl_90b9c6603d0e4df7a1793277d000a34f_50ebcae598e34df3ad8b1efc04e46eb0_master.jpg
 wwwroot\media\products\def32eac-99e6-422a-bde8-42f13be67392_9efdb0b5-39c3-452c-b810-a7c47aa0e281_ec3a03bec2e04fbe16f1.jpg
 wwwroot\media\products\e5018ed9-623c-48a4-9b8f-c2b07d6a1a4a_vocuatao.png
-wwwroot\media\products\e617aa77-c3f8-461f-b7aa-b84532648e7f_Screenshot 2025-10-19 150121.png
 wwwroot\media\products\f68cf913-d575-44ac-aae4-cb1dd5310aaf_rintaro tsumugi.jpg
 wwwroot\media\products\fb4e36e6-3606-4c0d-90ec-d92456c37f1e_mywaifu.jpg
+wwwroot\media\sliders\0497ff2b-b1d2-4a5a-8931-a82ca8c700b3_laptop_gaming_be5dafa4f904483fb5796a72d0750715_master.jpg
+wwwroot\media\sliders\28aa8a8c-60a5-4cf9-bcfc-93a75770ae69_laptopgamingdohoah22_1280x720-800-resize.jpg
 wwwroot\media\sliders\614490c1-03ed-4080-8bc8-b2de2d2ffa49_black-myth-wukong-banner.jpg
+wwwroot\media\sliders\724f790e-0c7c-4740-bd97-60ac22a9e02d_laptop-gaming-asus-2023-header-desktop.png
 wwwroot\media\sliders\85a983c5-ecc4-4e7f-9c03-96b5c82d65e8_rintaro tsumugi.jpg
+wwwroot\media\sliders\875e305b-e1dc-42b5-a9bd-8f8d1dba5120_6a4a9250679050818495017601ae0d63.jpg
 D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\css\bootstrap.min.css
 D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\favicon.ico
 D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\css\animate.css
@@ -175,3 +192,4 @@ D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\js\jquery.scrollUp.min.js
 D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\js\main.js
 D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\js\price-range.js
 D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\backend\js\site.js
+D:\WebTMDT_DACN\WebTMDT_DACN\wwwroot\data\vietnam-provinces.json

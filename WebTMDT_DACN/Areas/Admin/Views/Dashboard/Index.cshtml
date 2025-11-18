@@ -49,19 +49,29 @@
     .color-1 .stat-icon {
         background: #00c0ef;
     }
-    /* Xanh dương (Info) */
+
     .color-2 .stat-icon {
         background: #00a65a;
     }
-    /* Xanh lá (Success) */
+
     .color-3 .stat-icon {
         background: #f39c12;
     }
-    /* Vàng (Warning) */
+
     .color-4 .stat-icon {
         background: #dd4b39;
     }
-    /* Đỏ (Danger) */
+
+    /* === CSS MỚI: Căn chỉnh Tiêu đề Panel và Bộ lọc === */
+    .panel-heading-with-filter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .panel-heading-with-filter .panel-title {
+            margin: 0; /* Ghi đè margin mặc định */
+        }
 </style>
 
 <h3>Dashboard</h3>
@@ -113,11 +123,20 @@
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
-            <div class="panel-heading">
+
+            <div class="panel-heading panel-heading-with-filter">
                 <h3 class="panel-title">
                     <i class="fa fa-chart-line"></i> Thống Kê Doanh Thu
                 </h3>
+
+                <select class="form-control filter-select" style="width: 150px;">
+                    <option value="7" selected>7 ngày qua</option>
+                    <option value="30">1 tháng qua</option>
+                    <option value="90">3 tháng qua</option>
+                    <option value="365">1 năm qua</option>
+                </select>
             </div>
+
             <div class="panel-body">
                 <div id="myfirstchart" style="height: 250px;"></div>
             </div>
@@ -128,40 +147,87 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+
+            // 1. Khởi tạo biểu đồ (từ image_9dcc48.png)
+            // Biểu đồ được khởi tạo với dữ liệu rỗng (data: [])
+            var ChartMorris = new Morris.Line({
+                element: 'myfirstchart',
+                // Move data processing inside the success callback
+                data: [],
+                xkey: 'date',
+                ykeys: ['sold', 'quantity', 'revenue', 'profit'],
+                labels: ["Số lượng bán ra", "Đơn hàng", "Doanh thu", "Lợi nhuận"],
+            });
+
+            // 2. Tải dữ liệu ban đầu cho biểu đồ (từ image_9dcc6a.png)
+            // Gọi AJAX ngay lập tức để lấy dữ liệu lần đầu
             $.ajax({
                 url: "@Url.Action("GetChartData", "Dashboard")",
                 type: "POST",
                 dataType: "json",
                 success: function (data) {
-                    // Process the retrieved data
-                    var chartData = data.map(function (item) {
-                        return {
-                            date: item.date,
-                            sold: item.sold,
-                            quantity: item.quantity,
-                            revenue: item.revenue,
-                            profit: item.profit
-                        };
-                    });
-                    //Chart Morris
-                    new Morris.Line({
-                        element: 'myfirstchart',
-                        data: chartData,
-                        xkey: 'date',
-                        xLabelFormat: function (x) {
-                            return new Date(x).toLocaleDateString();
-                        },
-                        ykeys: ['sold', 'quantity', 'revenue', 'profit'],
-                        labels: ["Đơn hàng", "Số lượng bán ra", "Doanh thu", "Lợi nhuận"],
-                        lineColors: ['#00a65a', '#f39c12', '#00c0ef', '#dd4b39'], // Thêm màu cho đẹp
-                        resize: true
-                    });
+                    if (data) {
+                        // Cập nhật dữ liệu cho biểu đồ
+                        ChartMorris.setData(data.map(function (item) {
+                            return {
+                                date: item.date,
+                                sold: item.sold,
+                                quantity: item.quantity,
+                                revenue: item.revenue,
+                                profit: item.profit
+                            };
+                        }));
+                    } else {
+                        console.warn("No data received for Morris chart update.");
+                        ChartMorris.setData([]);
+                    }
                 },
                 error: function (error) {
                     console.error("Error fetching data:", error);
-                    $('#myfirstchart').html('<p class="text-danger text-center">Không thể tải dữ liệu biểu đồ.</p>');
                 }
             });
+
+            // 3. Xử lý sự kiện lọc/thay đổi (từ image_9dd00e.jpg và image_9dd395.png)
+            // Khi người dùng thay đổi lựa chọn (ví dụ: 7 ngày, 30 ngày)
+            $('.filter-select').on('change', function () {
+                var days = $(this).val();
+                var endDate = new Date();
+                var startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000);
+                // alert(startDate);
+                // alert(endDate);
+
+                // Gọi AJAX khác để lấy dữ liệu theo bộ lọc
+                $.ajax({
+                    url: "@Url.Action("GetChartDataBySelect", "Dashboard")",
+                    type: 'POST',
+                    dataType: "json",
+                    data: {
+                        startDate: startDate.toISOString().split('T')[0],
+                        endDate: endDate.toISOString().split('T')[0]
+                    },
+                    success: function (data) {
+                        if (data) {
+                            // Cập nhật lại dữ liệu cho biểu đồ
+                            ChartMorris.setData(data.map(function (item) {
+                                return {
+                                    date: item.date,
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                            }));
+                        } else {
+                            console.warn("No data received for Morris chart update.");
+                            ChartMorris.setData([]);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+            });
+
         });
     </script>
 }

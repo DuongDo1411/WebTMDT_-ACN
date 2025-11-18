@@ -144,6 +144,9 @@
         margin-top: 15px;
     }
 
+    /* --- CSS CHO CỘT BÊN PHẢI --- */
+
+    /* Box Tóm Tắt (Giữ nguyên) */
     .cart-summary-box {
         background: #fff;
         border-radius: 8px;
@@ -182,32 +185,10 @@
                 color: var(--primary-color);
             }
 
-        .cart-summary-box .btn {
-            display: block;
-            width: 100%;
-            text-transform: uppercase;
-            font-weight: 700;
-            padding: 12px;
-            font-size: 1rem;
-            margin-top: 25px;
-        }
-
-        .cart-summary-box .btn-primary {
-            background: var(--primary-color);
-            border: none;
-        }
-
-    .cart-empty {
-        text-align: center;
-        padding: 50px;
-        background: #fff;
-        border-radius: 8px;
-    }
-
+    /* Công cụ tính ship */
     .shipping-calculator {
         border-top: 1px solid #f0f0f0;
-        border-bottom: 1px solid #f0f0f0;
-        padding: 20px 0;
+        padding-top: 20px;
     }
 
         .shipping-calculator p {
@@ -219,7 +200,7 @@
         .shipping-calculator .form-control {
             margin-bottom: 10px;
         }
-    /* === CSS CHO NÚT TÍNH SHIP MỚI === */
+
     .btn-calculate-shipping {
         margin-top: 10px;
         background: #f0f0f0;
@@ -232,6 +213,72 @@
             background: #ddd;
             color: #333;
         }
+
+    /* === CSS MỚI CHO BOX THANH TOÁN === */
+    .payment-methods-box {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 30px;
+        margin-top: 20px; /* Tách biệt với box Tóm tắt */
+    }
+
+        .payment-methods-box h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+    /* Thông báo yêu cầu tính ship */
+    .payment-notice {
+        background: #fef8e5;
+        border: 1px solid #fddc88;
+        color: #a1803a;
+        padding: 15px;
+        border-radius: 5px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+        .payment-notice i {
+            margin-right: 5px;
+        }
+
+    /* CSS cho các nút thanh toán (COD, VNPAY) */
+    .btn-payment-option {
+        display: block;
+        width: 100%;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 12px;
+        font-size: 1rem;
+        margin-top: 10px;
+        border: none;
+        text-align: center;
+    }
+
+    /* Nút VNPAY (Copy từ code của bạn) */
+    .btn-vnpay {
+        background-color: #005A9C;
+        color: #ffffff !important;
+    }
+
+        .btn-vnpay:hover {
+            background-color: #004a80;
+            color: #ffffff !important;
+        }
+
+    /* Giỏ hàng trống */
+    .cart-empty {
+        text-align: center;
+        padding: 50px;
+        background: #fff;
+        border-radius: 8px;
+    }
 </style>
 
 <section id="cart_items" class="cart-page-section">
@@ -283,12 +330,13 @@
                 </div>
 
                 <div class="col-md-4">
+
                     <div class="cart-summary-box">
                         <h3>Tóm Tắt Giỏ Hàng</h3>
 
                         <div class="total-line">
                             <span>Tạm tính:</span>
-                            <span id="sub-total-price">@Model.GrandToTal.ToString("#,##0 VNĐ")</span>
+                            <span id="sub-total-price">@Model.SubTotal.ToString("#,##0 VNĐ")</span>
                         </div>
 
                         <div class="shipping-calculator">
@@ -308,48 +356,65 @@
                                     <option value="0">Chọn Phường Xã</option>
                                 </select>
                             </div>
-
                             <button type="button" class="btn btn-default btn-block btn-calculate-shipping">
                                 <i class="fa fa-calculator"></i> Tính Phí Ship
                             </button>
-                            <button type="button" class="btn btn-danger" id="btn-remove-shipping">
-                                Bỏ chọn vận chuyển
+                            <button type="button" class="btn btn-danger btn-block" id="btn-remove-shipping" style="margin-top: 10px;">
+                                <i class="fa fa-times"></i> Bỏ chọn vận chuyển
                             </button>
-                            @* <p><a asp-action="DeleteShipping" asp-controller="Cart">Xóa shipping</a></p> *@
                         </div>
 
                         <div class="total-line" style="margin-top: 20px;">
                             <span>Phí ship:</span>
-                            <span class="total-price" id="grand-total-price">@Model.ShippingCost.ToString("#,##0 VNĐ")</span>
+                            <span class="total-price" id="shipping-cost-price">@Model.ShippingCost.ToString("#,##0 VNĐ")</span>
                         </div>
 
                         <div class="grand-total-line">
                             <span>Tổng cộng:</span>
                             <span class="total-price" id="grand-total-price">@Model.GrandToTal.ToString("#,##0 VNĐ")</span>
                         </div>
-
-                        @if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            @if(Model.ShippingCost <= 0)
-                            {
-                                <a disabled="disabled" class="btn btn-primary" asp-controller="Checkout" asp-action="Checkout">
-                                    <i class="fa fa-check"></i> Tiến hành Thanh Toán
-                                </a>
-                                <span class="text text-danger">Yêu cầu tính phí vận chuyển trước khi đặt hàng</span>
-                            } else
-                            {
-                                <a class="btn btn-primary" asp-controller="Checkout" asp-action="Checkout">
-                                    <i class="fa fa-check"></i> Tiến hành Thanh Toán
-                                </a>
-                            }
-                        }
-                        else
-                        {
-                            <a class="btn btn-primary" asp-controller="Account" asp-action="Login">
-                                <i class="fa fa-lock"></i> Đăng nhập để Thanh Toán
-                            </a>
-                        }
                     </div>
+
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <div class="payment-methods-box">
+                            <h3>Phương thức Thanh toán</h3>
+
+                            @if (Model.ShippingCost <= 0)
+                            {
+                                <div class="payment-notice">
+                                    <i class="fa fa-info-circle"></i> Vui lòng tính phí vận chuyển ở trên để chọn phương thức thanh toán.
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary btn-payment-option" asp-controller="Checkout" asp-action="Checkout">
+                                    <i class="fa fa-truck"></i> Thanh toán khi nhận hàng (COD)
+                                </a>
+
+                                <form method="POST" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                                    <input type="hidden" name="Name" value="@User.Identity.Name" />
+                                    <input type="hidden" name="Amount" value="@Model.GrandToTal" />
+                                    <input type="hidden" name="OrderDescription" value="Thanh toán đơn hàng tại DuongDoStore" />
+                                    <input type="hidden" name="OrderType" value="other" />
+                                    <button class="btn btn-vnpay btn-payment-option" type="submit">
+                                        <i class="fa fa-credit-card"></i> Thanh toán qua VNPAY
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="payment-methods-box">
+                            <h3>Thanh toán</h3>
+                            <p style="text-align: center; font-size: 1rem; color: #555;">Vui lòng đăng nhập để tiến hành thanh toán.</p>
+                            <a class="btn btn-primary" asp-controller="Account" asp-action="Login" style="width: 100%;">
+                                <i class="fa fa-lock"></i> Đăng nhập ngay
+                            </a>
+                        </div>
+                    }
+
                 </div>
             </div>
         }
@@ -373,15 +438,82 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            // Khai báo biến toàn cục để lưu trữ dữ liệu địa lý
+            var geoData = [];
 
-            // --- SCRIPT MỚI: Xử lý nút Tính Phí Ship ---
-            // (Đã đổi class từ .btn-add-shipping sang .btn-calculate-shipping)
+            // 1. Tải dữ liệu JSON từ máy chủ của bạn
+            // (Đảm bảo đường dẫn tới file JSON của bạn là /data/vietnam_location.json)
+            $.getJSON('/data/vietnam-provinces.json', function(data) {
+                geoData = data;
+
+                // Load Tỉnh/Thành Phố
+                $.each(geoData, function (key, tinh) {
+                    // CẬP NHẬT: Dùng 'tinh.name' cho cả value và text
+                    $("#tinh").append('<option value="' + tinh.name + '">' + tinh.name + '</option>');
+                });
+            }).fail(function() {
+                 // Xử lý lỗi nếu file JSON không tồn tại hoặc không đọc được
+                 console.error("Lỗi: Không thể tải dữ liệu địa lý từ file JSON.");
+                 Swal.fire("Lỗi tải dữ liệu", "Không thể tải danh sách Tỉnh/Thành. Vui lòng kiểm tra file /wwwroot/data/vietnam_location.json", "error");
+            });
+
+            // 2. Xử lý sự kiện khi chọn Tỉnh/Thành
+            $("#tinh").change(function(e) {
+                var tenTinh = $(this).val(); // Lấy ra tên Tỉnh (vì value giờ là name)
+
+                $("#quan").html('<option value="0">Chọn Quận Huyện</option>');
+                $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+
+                if (tenTinh != "0") {
+                    // CẬP NHẬT: Tìm bằng 'tinh.name'
+                    var selectedProvince = geoData.find(t => t.name === tenTinh);
+
+                    // CẬP NHẬT: Dùng 'selectedProvince.districts'
+                    if (selectedProvince && selectedProvince.districts) {
+                        $.each(selectedProvince.districts, function (key, quan) {
+                            // CẬP NHẬT: Dùng 'quan.name' cho cả value và text
+                            $("#quan").append('<option value="' + quan.name + '">' + quan.name + '</option>');
+                        });
+                    }
+                }
+            });
+
+            // 3. Xử lý sự kiện khi chọn Quận/Huyện
+            $("#quan").change(function(e) {
+                var tenTinh = $("#tinh").val();
+                var tenQuan = $(this).val(); // Lấy ra tên Quận
+
+                $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+
+                if (tenQuan != "0") {
+                    // CẬP NHẬT: Tìm Tỉnh bằng 'tinh.name'
+                    var selectedProvince = geoData.find(t => t.name === tenTinh);
+
+                    if (selectedProvince && selectedProvince.districts) {
+                        // CẬP NHẬT: Tìm Quận bằng 'quan.name'
+                        var selectedDistrict = selectedProvince.districts.find(q => q.name === tenQuan);
+
+                        // CẬP NHẬT: Dùng 'selectedDistrict.wards'
+                        if (selectedDistrict && selectedDistrict.wards) {
+                            $.each(selectedDistrict.wards, function (key, phuong) {
+                                // CẬP NHẬT: Dùng 'phuong.name' cho cả value và text
+                                $("#phuong").append('<option value="' + phuong.name + '">' + phuong.name + '</option>');
+                            });
+                        }
+                    }
+                }
+            });
+
+
+            // --- CÁC SCRIPT CŨ VẪN GIỮ NGUYÊN ---
+
+            // 4. Xử lý nút Tính Phí Ship (Không đổi)
+            // Code này đã đúng vì nó lấy .text() (tên) để gửi đi
             $(".btn-calculate-shipping").click(function () {
                 var tinh = $("#tinh").find("option:selected").text();
                 var quan = $("#quan").find("option:selected").text();
                 var phuong = $("#phuong").find("option:selected").text();
 
-                // Cải thiện logic kiểm tra (check text mặc định)
                 if (tinh == "Chọn Tỉnh Thành" || quan == "Chọn Quận Huyện" || phuong == "Chọn Phường Xã") {
                     Swal.fire("Lỗi", "Vui lòng chọn đầy đủ Tỉnh/Quận/Phường.", "error");
                 }
@@ -389,72 +521,29 @@
                     $.ajax({
                         type: "POST",
                         url: "@Url.Action("GetShipping", "Cart")",
-                        data: { tinh: tinh, quan: quan, phuong: phuong }, // Send data to the server
+                        data: { tinh: tinh, quan: quan, phuong: phuong },
                         success: function (result) {
                             if (result) {
-                                // Hiển thị thông báo thành công rồi tải lại
                                 Swal.fire({
                                     title: "Đã cập nhật",
                                     text: "Đã cập nhật phí ship. Trang sẽ được tải lại...",
                                     icon: "success",
-                                    timer: 2000, // Tự tắt sau 2 giây
+                                    timer: 2000,
                                     showConfirmButton: false
                                 }).then((result) => {
-                                    location.reload(); // Tải lại trang để server tính toán
+                                    location.reload();
                                 });
                             }
                         },
                         error: function () {
-                             Swal.fire("Lỗi", "Không thể kết nối đến server.", "error");
+                             Swal.fire("Lỗi", "Không tìm thấy phí ship cho khu vực này.", "error");
                         }
                     });
                 }
             });
 
-            // --- SCRIPT CŨ: Load Tỉnh/Thành/Quận/Huyện ---
-            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm',function(data_tinh){
-                if(data_tinh.error==0){
-                    $.each(data_tinh.data, function (key_tinh,val_tinh) {
-                        $("#tinh").append('<option value="'+val_tinh.id+'">'+val_tinh.full_name+'</option>');
-                    });
-                    $("#tinh").change(function(e){
-                        var idtinh=$(this).val();
-                        //Lấy quận huyện
-                        $.getJSON('https://esgoo.net/api-tinhthanh/2/'+idtinh+'.htm',function(data_quan){
-                            if(data_quan.error==0){
-                                $("#quan").html('<option value="0">Chọn Quận Huyện</option>');
-                                $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
-                                $.each(data_quan.data, function (key_quan,val_quan) {
-                                    $("#quan").append('<option value="'+val_quan.id+'">'+val_quan.full_name+'</option>');
-                                });
-                                //Lấy phường xã
-                                $("#quan").change(function(e){
-                                    var idquan=$(this).val();
-                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/'+idquan+'.htm',function(data_phuong){
-                                        if(data_phuong.error==0){
-                                            $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
-                                            $.each(data_phuong.data, function (key_phuong,val_phuong) {
-                                                $("#phuong").append('<option value="'+val_phuong.id+'">'+val_phuong.full_name+'</option>');
-                                            });
-                                        }
-                                    });
-                                });
-
-                            }
-                        });
-                    });
-
-                }
-            });
-        });
-            $(document).ready(function () {
-
-            // ... (Các script khác của bạn có thể ở đây) ...
-
-            // Xử lý sự kiện click cho nút Bỏ chọn
+            // 5. Xử lý sự kiện click cho nút Bỏ chọn (Không đổi)
             $("#btn-remove-shipping").click(function () {
-
-                // Hiển thị hộp thoại xác nhận
                 Swal.fire({
                     title: 'Bạn chắc chắn?',
                     text: "Bạn muốn bỏ chọn phí vận chuyển này?",
@@ -465,14 +554,11 @@
                     confirmButtonText: 'Đồng ý!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Nếu người dùng đồng ý, gọi AJAX
                         $.ajax({
                             type: "POST",
-                            // SỬA Ở ĐÂY: Gọi đến hàm "DeleteShipping" của bạn
                             url: "@Url.Action("DeleteShipping", "Cart")",
                             success: function (result) {
-                                if (result.success) { // Giả sử hàm của bạn trả về { success = true }
-                                    // Tải lại trang để xóa cookie và cập nhật giao diện
+                                if (result.success) {
                                     location.reload();
                                 }
                             },

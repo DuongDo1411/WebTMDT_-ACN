@@ -1,0 +1,108 @@
+﻿@using WebTMDT_DACN.Models.Vnpay
+@model PaymentResponseModel
+
+@{
+    ViewData["title"] = "Giao dịch VNPay thành công";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // <-- Đảm bảo dùng Layout chính
+}
+
+<style>
+    .payment-success-section {
+        background: #f9f9f9;
+        padding: 60px 0;
+    }
+
+    .payment-success-card {
+        background: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-top: 5px solid #5cb85c; /* Đường viền xanh lá cây (Success) */
+        text-align: center;
+    }
+
+    .success-icon {
+        color: #5cb85c;
+        font-size: 4rem;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .main-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .transaction-details {
+        text-align: left;
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
+
+        .transaction-details p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .transaction-details b {
+            color: #333;
+            display: inline-block;
+            min-width: 150px;
+        }
+
+    .history-link a {
+        display: inline-block;
+        margin-top: 20px;
+        font-size: 1.1rem;
+        color: var(--primary-color); /* Màu cam chủ đạo */
+        font-weight: 600;
+    }
+</style>
+
+<section class="payment-success-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="payment-success-card">
+
+                    <i class="fa fa-check-circle success-icon"></i>
+
+                    <h5 class="main-title">GIAO DỊCH VNPay THÀNH CÔNG</h5>
+
+                    <p style="font-size: 1.5rem; font-weight: 700; color: #5cb85c;">
+                        Cảm ơn bạn, đơn hàng đã được thanh toán và đang chờ xử lý!
+                    </p>
+
+                    <div class="transaction-details">
+                        <p><b>Mã đơn hàng:</b> <span>@Model.OrderId</span></p>
+                        <p><b>Mô tả đơn hàng:</b> <span>@Model.OrderDescription</span></p>
+                        <hr />
+                        <p><b>Mã giao dịch VNPay:</b> <span>@Model.TransactionId</span></p>
+                        <p><b>Mã thanh toán (Bank Ref):</b> <span>@Model.PaymentId</span></p>
+                        <hr />
+
+                        <p><b>Phương thức thanh toán:</b> <span>@Model.PaymentMethod</span></p>
+                        <p>
+                            <b>TỔNG TIỀN ĐÃ THANH TOÁN:</b>
+                            <span style="color: #dd4b39; font-weight: 700;">
+                                @((Model.Amount / 100).ToString("#,##0 VNĐ"))
+                            </span>
+                        </p>
+
+                    </div>
+
+                    <div class="history-link">
+                        <a asp-controller="Account" asp-action="History">
+                            Xem lịch sử đơn hàng đã đặt <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

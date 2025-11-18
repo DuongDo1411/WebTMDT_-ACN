@@ -410,6 +410,9 @@ namespace WebTMDT_DACN.Migrations
                     b.Property<string>("OrderCode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("ShippingCost")
                         .HasColumnType("decimal(18,2)");
 
@@ -604,6 +607,37 @@ namespace WebTMDT_DACN.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Statisticals");
+                });
+
+            modelBuilder.Entity("WebTMDT_DACN.Models.VnpayModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VnInfos");
                 });
 
             modelBuilder.Entity("WebTMDT_DACN.Models.WishlistModel", b =>

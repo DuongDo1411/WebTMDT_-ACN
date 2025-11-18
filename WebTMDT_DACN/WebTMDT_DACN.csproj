@@ -28,6 +28,7 @@
     <Folder Include="wwwroot\backend\images\" />
     <Folder Include="wwwroot\media\sliders\" />
     <Folder Include="wwwroot\media\products\" />
+    <Folder Include="wwwroot\data\" />
   </ItemGroup>
 
 </Project>

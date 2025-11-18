@@ -250,3 +250,5 @@ D:\WebTMDT_DACN\WebTMDT_DACN\bin\Debug\net9.0\Microsoft.Extensions.Identity.Stor
 D:\WebTMDT_DACN\WebTMDT_DACN\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 D:\WebTMDT_DACN\WebTMDT_DACN\obj\Debug\net9.0\compressed\todhgl8oil-4o31ybsipn.gz
 D:\WebTMDT_DACN\WebTMDT_DACN\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.Google.dll
+D:\WebTMDT_DACN\WebTMDT_DACN\obj\Debug\net9.0\WebTMDT_DACN.sourcelink.json
+D:\WebTMDT_DACN\WebTMDT_DACN\obj\Debug\net9.0\compressed\v75wg7jp4o-x7nk4npgcy.gz

@@ -1,6 +1,7 @@
 ﻿@model ShippingModel;
 @{
     ViewData["Title"] = "Quản lý Vận chuyển";
+    
     Paginate paper = new Paginate();
     int pageNo = 0;
     if (ViewBag.paper != null)
@@ -9,12 +10,6 @@
         pageNo = paper.CurrentPage;
     }
 }
-
-@* XÓA BỎ CSS TÙY CHỈNH (css_select) VÌ ĐÃ CÓ BOOTSTRAP HỖ TRỢ *@
-@* <style type="text/css">
-    .css_select_div{ text-align: center;}
-    .css_select{ display: inline-table; width: 25%; ...}
-</style> *@
 
 @* ============================================= *@
 @* KHỐI 1: FORM TẠO SHIPPING *@
@@ -26,13 +21,11 @@
     <div class="panel-body">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        @* Dùng Bootstrap Grid (row/col) để xếp hàng *@
         <div class="row">
             @* CỘT 1: TỈNH THÀNH *@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Tỉnh Thành</label>
-                    @* SỬ DỤNG class="form-control" của Bootstrap *@
                     <select class="form-control" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
                         <option value="0">Chọn Tỉnh Thành</option>
                     </select>
@@ -63,7 +56,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Nhập giá</label>
-                    <input asp-for="Price" id="price-shipping" class="form-control" placeholder="Ví dụ: 25000" />
+                    <input asp-for="Price" id="price-shipping" class="form-control" placeholder="Ví dụ: 25000" type="number" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
             </div>
@@ -87,7 +80,6 @@
         <h3 class="panel-title">Shopping List</h3>
     </div>
     <div class="panel-body">
-        @* Thêm "table-responsive" để bảng không bị vỡ trên di động *@
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="myTable" style="width:100%">
                 <thead>
@@ -104,24 +96,26 @@
                     @{
                         int i = (paper.CurrentPage - 1) * paper.PageSize + 1;
                     }
-                    @foreach (var shipping in ViewBag.Shippings)
+                    @if (ViewBag.Shippings != null)
                     {
-                        <tr>
-                            <td>@i</td>
-                            <td>@shipping.City</td>
-                            <td>@shipping.District</td>
-                            <td>@shipping.Ward</td>
-                            <td>@shipping.Price.ToString("#,##0 VNĐ")</td>
-                            <td>
-                                @* SỬA LỖI NHÁY KÉP (dùng nháy đơn bên ngoài) VÀ THÊM ICON *@
-                                <a onclick="return confirm('Bạn chắc chắn muốn xóa chứ')"
-                                   href="@Url.Action("Delete", "Shipping", new { id = shipping.Id })"
-                                   class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash"></i> Delete
-                                </a>
-                            </td>
-                        </tr>
-                        { i++; }
+                        @foreach (var shipping in ViewBag.Shippings)
+                        {
+                            <tr>
+                                <td>@i</td>
+                                <td>@shipping.City</td>
+                                <td>@shipping.District</td>
+                                <td>@shipping.Ward</td>
+                                <td>@shipping.Price.ToString("#,##0 VNĐ")</td>
+                                <td>
+                                    <a onclick="return confirm('Bạn chắc chắn muốn xóa chứ')"
+                                       href="@Url.Action("Delete", "Shipping", new { id = shipping.Id })"
+                                       class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            { i++; }
+                        }
                     }
                 </tbody>
             </table>
@@ -137,80 +131,101 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    @* PHẦN JAVASCRIPT CỦA BẠN (giữ nguyên không đổi) *@
+    @* ============================================= *@
+    @* PHẦN SCRIPT ĐÃ CẬP NHẬT (API LOCAL JSON) *@
+    @* ============================================= *@
     <script>
-        $(".btn-add-shipping").click(function () {
-            var tinh = $("#tinh").find("option:selected").text();
-            var quan = $("#quan").find("option:selected").text();
-            var phuong = $("#phuong").find("option:selected").text();
-            var price = $("#price-shipping").val();
-            // alert(tinh);
-            // alert(quan);
-            // alert(phuong);
-            // alert(price);
-            if (tinh == "" || quan == "" || phuong == "" || price == "") {
-                Swal.fire("Vui lòng không bỏ trống.");
-            }
-            else {
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("StoreShipping", "Shipping")",
-                    data: { tinh: tinh, quan: quan, phuong: phuong, price: price }, // Send data to the server
-                    success: function (result) {
-                        // Handle successful update
-                        if (result.success) {
-                            Swal.fire({
-                                title: "Thành công!",
-                                text: "Thêm vận chuyển thành công.",
-                                icon: "success"
-                            }).then((result) => {
-                                // Tự động load lại trang sau khi thêm thành công
-                                location.reload();
-                            });
-                        }
-                        else if (result.duplicate) {
-                            Swal.fire("Lỗi!", "Dữ liệu bị trùng lặp.", "error");
-                        }
-                    }
-                });
-            }
-        });
         $(document).ready(function() {
-            //Lấy tỉnh thành
-            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm',function(data_tinh){
-                if(data_tinh.error==0){
-                    $.each(data_tinh.data, function (key_tinh,val_tinh) {
-                        $("#tinh").append('<option value="'+val_tinh.id+'">'+val_tinh.full_name+'</option>');
-                    });
-                    $("#tinh").change(function(e){
-                        var idtinh=$(this).val();
-                        //Lấy quận huyện
-                        $.getJSON('https://esgoo.net/api-tinhthanh/2/'+idtinh+'.htm',function(data_quan){
-                            if(data_quan.error==0){
-                                $("#quan").html('<option value="0">Quận Huyện</option>');
-                                $("#phuong").html('<option value="0">Phường Xã</option>');
-                                $.each(data_quan.data, function (key_quan,val_quan) {
-                                    $("#quan").append('<option value="'+val_quan.id+'">'+val_quan.full_name+'</option>');
-                                });
-                                //Lấy phường xã
-                                $("#quan").change(function(e){
-                                    var idquan=$(this).val();
-                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/'+idquan+'.htm',function(data_phuong){
-                                        if(data_phuong.error==0){
-                                            $("#phuong").html('<option value="0">Phường Xã</option>');
-                                            $.each(data_phuong.data, function (key_phuong,val_phuong) {
-                                                $("#phuong").append('<option value="'+val_phuong.id+'">'+val_phuong.full_name+'</option>');
-                                            });
-                                        }
-                                    });
-                                });
 
+            // === SCRIPT XỬ LÝ NÚT CREATE ===
+            $(".btn-add-shipping").click(function () {
+                var tinh = $("#tinh").find("option:selected").text();
+                var quan = $("#quan").find("option:selected").text();
+                var phuong = $("#phuong").find("option:selected").text();
+                var price = $("#price-shipping").val();
+
+                // ✅ SỬA LỖI LOGIC: Kiểm tra giá trị text mặc định
+                if (tinh == "Chọn Tỉnh Thành" || quan == "Chọn Quận Huyện" || phuong == "Chọn Phường Xã" || price == "" || price == "0") {
+                    Swal.fire("Lỗi!", "Vui lòng chọn đầy đủ địa chỉ và nhập giá vận chuyển.", "error");
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("StoreShipping", "Shipping")",
+                        data: { tinh: tinh, quan: quan, phuong: phuong, price: price }, // Send data to the server
+                        success: function (result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    title: "Thành công!",
+                                    text: "Thêm vận chuyển thành công.",
+                                    icon: "success"
+                                }).then((result) => {
+                                    location.reload();
+                                });
                             }
-                        });
+                            else if (result.duplicate) {
+                                Swal.fire("Lỗi!", "Dữ liệu bị trùng lặp.", "error");
+                            }
+                        }
                     });
-
                 }
             });
-        });
+
+            // === SCRIPT TẢI ĐỊA CHỈ (API LOCAL JSON - GIỐNG HỆT TRANG CART) ===
+            var geoData = [];
+
+            // 1. Tải dữ liệu JSON từ máy chủ của bạn
+            // (Đảm bảo tên file chính xác, ở đây tôi dùng file bạn đã dùng ở Cart)
+            $.getJSON('/data/vietnam-provinces.json', function(data) {
+                geoData = data;
+
+                // Load Tỉnh/Thành Phố
+                $.each(geoData, function (key, tinh) {
+                    // Dùng 'tinh.name' cho cả value và text (giống trang Cart)
+                    $("#tinh").append('<option value="' + tinh.name + '">' + tinh.name + '</option>');
+                });
+            }).fail(function() {
+                 console.error("Lỗi: Không thể tải dữ liệu địa lý từ file JSON.");
+                 Swal.fire("Lỗi tải dữ liệu", "Không thể tải danh sách Tỉnh/Thành.", "error");
+            });
+
+            // 2. Xử lý sự kiện khi chọn Tỉnh/Thành
+            $("#tinh").change(function(e) {
+                var tenTinh = $(this).val();
+
+                $("#quan").html('<option value="0">Chọn Quận Huyện</option>');
+                $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+
+                if (tenTinh != "0") {
+                    var selectedProvince = geoData.find(t => t.name === tenTinh);
+                    if (selectedProvince && selectedProvince.districts) {
+                        $.each(selectedProvince.districts, function (key, quan) {
+                            $("#quan").append('<option value="' + quan.name + '">' + quan.name + '</option>');
+                        });
+                    }
+                }
+            });
+
+            // 3. Xử lý sự kiện khi chọn Quận/Huyện
+            $("#quan").change(function(e) {
+                var tenTinh = $("#tinh").val();
+                var tenQuan = $(this).val();
+
+                $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+
+                if (tenQuan != "0") {
+                    var selectedProvince = geoData.find(t => t.name === tenTinh);
+                    if (selectedProvince && selectedProvince.districts) {
+                        var selectedDistrict = selectedProvince.districts.find(q => q.name === tenQuan);
+                        if (selectedDistrict && selectedDistrict.wards) {
+                            $.each(selectedDistrict.wards, function (key, phuong) {
+                                $("#phuong").append('<option value="' + phuong.name + '">' + phuong.name + '</option>');
+                            });
+                        }
+                    }
+                }
+            });
+
+        }); // <- Kết thúc $(document).ready()
     </script>
 }

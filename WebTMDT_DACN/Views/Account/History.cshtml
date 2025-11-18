@@ -111,6 +111,7 @@
                                         <th>Phí Ship</th>
                                         <th>Thời gian đặt</th>
                                         <th>Trạng thái</th>
+                                        @* <th>Hình thức thanh toán</th> *@
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
@@ -123,21 +124,36 @@
                                             <td>@item.ShippingCost.ToString("#,##0 VNĐ")</td>
                                             <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
                                             <td>
-                                                @if (@item.Status == 1)
+                                                <!-- ✅ SỬA LỖI LOGIC HIỂN THỊ TẠI ĐÂY -->
+                                                @if (item.Status == 1)
                                                 {
                                                     <span class="status-badge status-new">Đơn hàng mới</span>
                                                 }
-                                                else if (@item.Status == 2)
+                                                else if (item.Status == 0) // Sửa từ 2 thành 0
                                                 {
                                                     <span class="status-badge status-processed">Đã xử lý</span>
                                                 }
+                                                else if (item.Status == 3) // Thêm check cho 3
+                                                {
+                                                    <span class="status-badge status-cancelled">Đã hủy</span>
+                                                }
                                                 else
                                                 {
-                                                    <span class="status-badge status-cancelled">Đơn hàng đã hủy</span>
+                                                    <span class="status-badge">Không rõ (@item.Status)</span>
                                                 }
                                             </td>
+                                            @* <td>
+                                                @if (@item.PaymentMethod == "COD")
+                                                {
+                                                    <span class="text text-primary">@item.PaymentMethod</span>
+                                                }
+                                                else if (@item.PaymentMethod != "COD")
+                                                {
+                                                    <span class="text text-success">@item.PaymentMethod</span>
+                                                }
+                                            </td> *@
                                             <td style="width: 120px;">
-                                                @if (@item.Status == 1)
+                                                @if (item.Status == 1) // Chỉ hiện nút Hủy khi đơn hàng còn mới
                                                 {
                                                     <a asp-action="CancelOrder" class="btn btn-warning btn-sm confirm-cancellation" asp-controller="Account" asp-route-ordercode="@item.OrderCode">
                                                         <i class="fa fa-times"></i> Hủy đơn

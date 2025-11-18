@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using WebTMDT_DACN.Areas.Admin.Repository;
 using WebTMDT_DACN.Models;
 using WebTMDT_DACN.Repository;
+using WebTMDT_DACN.Services.Vnpay;
 
 var builder = WebApplication.CreateBuilder(args);
+
 //Connection db
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -40,7 +42,8 @@ builder.Services.Configure<IdentityOptions>(options =>
   
     options.User.RequireUniqueEmail = true;
 });
-
+//Connect VNPay API
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 var app = builder.Build();
 app.UseStatusCodePagesWithRedirects("/Home/Error?statuscode={0}");
 

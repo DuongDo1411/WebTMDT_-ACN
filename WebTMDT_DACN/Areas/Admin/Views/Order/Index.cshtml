@@ -46,13 +46,22 @@
                 <td>@item.UserName</td>
                 <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
                 <td>
-                    @if (@item.Status == 1)
+                    <!-- ✅ SỬA LỖI LOGIC HIỂN THỊ TẠI ĐÂY -->
+                    @if (item.Status == 1)
                     {
                         <span class="text text-success">Đơn hàng mới</span>
                     }
+                    else if (item.Status == 0) // Sửa từ 2 thành 0
+                    {
+                        <span class="text text-info">Đã xử lý</span> <!-- Đổi màu cho dễ phân biệt -->
+                    } 
+                    else if (item.Status == 3) // Thêm check cho Status 3
+                    {
+                        <span class="text text-danger">Đã hủy</span>
+                    }
                     else
                     {
-                        <span class="text text-danger">Đơn hàng đã xử lý</span>
+                        <span class="text text-muted">Không rõ (@item.Status)</span>
                     }
 
                 </td>

@@ -239,18 +239,14 @@
 							<ul class="nav navbar-nav">
 								@if (User.Identity?.IsAuthenticated ?? false)
 								{
-									<li><a asp-action="Wishlist" asp-controller="Home"><i class="fa fa-star"></i> Wishlist</a></li>
-									<li><a asp-action="Compare" asp-controller="Home"><i class="fa fa-exchange"></i> Compare</a></li>
-									<li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-									<li><a asp-action="Checkout" asp-controller="Cart"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 									<li class="dropdown">
-										<a style="cursor:pointer"  class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle"></i> User <span class="caret"></span></a>
+										<a style="cursor:pointer"  class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle"></i> User <span class="caret"></span></a>
 										<ul class="dropdown-menu">
 											<li><a asp-action="UpdateAccount" asp-controller="Account"><i class="fa fa-user"></i>Account Info</a></li>
 											<li><a asp-action="History" asp-controller="Account"><i class="fa fa-history"></i>Orders History</a></li>
 										</ul>
 									</li>
-									
+
 									@if (User.IsInRole("ADMIN"))
 									{
 										<li><a asp-controller="Product" asp-action="Index" asp-area="Admin"><i class="fa fa-lock"></i>Admin CMS</a></li>
@@ -282,22 +278,14 @@
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
-								<li class="dropdown">
-									<a asp-controller="Product">Shop<i class="fa fa-angle-down"></i></a>
-									<ul role="menu" class="sub-menu">
-										<li><a asp-controller="Category">Categories</a></li>
-										<li><a asp-controller="Product" asp-action="Details">Product Details</a></li>
-										<li><a asp-controller="Cart" asp-action="Checkout">Checkout</a></li>
-										<li><a asp-controller="Cart">Cart</a></li>
-									</ul>
-								</li>
-								<li class="dropdown">
-									<a href="#">Blog<i class="fa fa-angle-down"></i></a>
-									<ul role="menu" class="sub-menu">
-										<li><a href="blog.html">Blog List</a></li>
-										<li><a href="blog-single.html">Blog Single</a></li>
-									</ul>
-								</li>
+
+								@if (User.Identity?.IsAuthenticated ?? false)
+								{
+									<li><a asp-action="Wishlist" asp-controller="Home">Wishlist</a></li>
+									<li><a asp-action="Compare" asp-controller="Home">Compare</a></li>
+									<li><a asp-controller="Cart" asp-action="Index">Cart</a></li>
+									@* <li><a asp-action="Checkout" asp-controller="Cart">Checkout</a></li> *@
+								}
 
 								<li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
 							</ul>
@@ -395,7 +383,7 @@
 			<div class="container">
 				<div class="row">
 					<p class="pull-left">Copyright © 2025 E-SHOPPER Inc. All rights reserved.</p>
-					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">DuongDo</a></span></p>
 				</div>
 			</div>
 		</div>

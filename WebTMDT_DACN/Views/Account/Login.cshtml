@@ -4,73 +4,110 @@
 }
 
 <style>
-    /* (CSS cũ của bạn từ dòng 5 đến 132) */
+    /* Lưu ý: Đây là toàn bộ CSS đã được làm sạch, không còn các class Google */
     .login-page-section {
         background: #f9f9f9;
         padding: 60px 0;
     }
-    /* ... (giữ nguyên toàn bộ CSS của bạn) ... */
-    .form-group .text-danger {
-        display: block;
-        margin-top: 5px;
+
+    .login-form-container {
+        background: #fff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
-    /* ======================================== */
-    /* ===== BẮT ĐẦU CSS CHO NÚT GOOGLE ===== */
-    /* ======================================== */
+        .login-form-container h2 {
+            text-align: center;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
 
-    /* Thêm dải phân cách "Hoặc" */
-    .external-login-divider {
-        text-align: center;
-        margin: 25px 0 20px 0; /* Tăng khoảng cách */
-        position: relative;
+    .form-group label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
     }
 
-        .external-login-divider span {
-            background: #fff; /* Phải khớp với nền .login-form-container */
-            padding: 0 15px;
-            position: relative;
-            z-index: 2;
-            color: #777;
-            font-weight: 600;
-        }
+    /* Dùng input-group để thêm icon */
+    .input-group {
+        margin-bottom: 20px;
+    }
 
-        .external-login-divider:before {
-            content: "";
-            display: block;
-            width: 100%;
-            height: 1px;
-            background: #ddd; /* Màu đường kẻ */
-            position: absolute;
-            top: 50%;
-            left: 0;
-            z-index: 1;
-        }
+    .input-group-addon {
+        background: #f7f7f7;
+        border: 1px solid #ddd;
+        border-right: none;
+        color: var(--primary-color);
+        border-radius: 5px 0 0 5px;
+        padding: 6px 15px;
+    }
 
-    /* Nút Google */
-    .btn-google {
+    .input-group .form-control {
+        border-radius: 0 5px 5px 0 !important;
+        height: 45px;
+        box-shadow: none;
+        border-color: #ddd;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 5px rgba(254, 152, 15, 0.5);
+        z-index: 2;
+    }
+
+    /* Nút Đăng nhập (Call-to-Action) */
+    .btn-login {
         width: 100%;
         padding: 12px;
-        font-size: 1.05rem; /* Hơi nhỏ hơn nút chính 1 chút */
+        font-size: 1.1rem;
         font-weight: 700;
-        background: #4285F4; /* Màu xanh Google */
+        background: var(--primary-color);
         border: none;
         color: #fff;
         border-radius: 5px;
         transition: background 0.2s ease;
     }
 
-        .btn-google:hover {
-            background: #357ae8; /* Xanh đậm hơn */
+        .btn-login:hover {
+            background: #e6890e;
             color: #fff;
         }
 
-        /* Icon Google (nếu bạn dùng Font Awesome 5+) */
-        /* Nếu bạn dùng FA 4, bạn có thể cần dùng <i class="fa fa-google"></i> */
-        .btn-google .fa-google {
-            margin-right: 10px;
+    /* Link Quên mật khẩu */
+    .forgot-password-link {
+        text-align: right;
+        display: block;
+        margin-top: -10px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+        .forgot-password-link a {
+            color: #777;
         }
 
+            .forgot-password-link a:hover {
+                color: var(--primary-color);
+            }
+
+    /* Link Đăng ký */
+    .register-link {
+        text-align: center;
+        margin-top: 25px; /* Điều chỉnh khoảng cách cho sạch sẽ */
+        font-size: 1rem;
+    }
+
+        .register-link a {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+    .form-group .text-danger {
+        display: block;
+        margin-top: 5px;
+    }
 </style>
 
 <section id="form" class="login-page-section">
@@ -108,16 +145,6 @@
 
                         <button type="submit" class="btn btn-login">Đăng nhập</button>
                     </form>
-
-                    @* <div class="external-login-divider">
-                        <span>Hoặc đăng nhập bằng</span>
-                    </div> *@
-
-                    @* <form asp-action="LoginGoogle" asp-controller="Account" method="post">
-                        <button type="submit" class="btn btn-google" name="provider" value="Google">
-                            <i class="fa fa-google"></i> Đăng nhập bằng Google
-                        </button>
-                    </form> *@
 
                     <div class="register-link">
                         Chưa có tài khoản?

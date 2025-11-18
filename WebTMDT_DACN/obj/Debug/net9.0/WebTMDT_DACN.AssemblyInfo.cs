@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebTMDT_DACN")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+981894d969459eaebd02340c07650b5a578b0469")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebTMDT_DACN")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebTMDT_DACN")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

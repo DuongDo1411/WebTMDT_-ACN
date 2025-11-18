@@ -6,6 +6,7 @@ using WebTMDT_DACN.Areas.Admin.Repository;
 using WebTMDT_DACN.Migrations;
 using WebTMDT_DACN.Models;
 using WebTMDT_DACN.Repository;
+using WebTMDT_DACN.Services.Vnpay;
 
 namespace WebTMDT_DACN.Controllers
 {
@@ -13,12 +14,15 @@ namespace WebTMDT_DACN.Controllers
     {
         private readonly DataContext _datacontext;
         private readonly IEmailSender _emailSender;
-        public CheckoutController(IEmailSender emailSender , DataContext context)
+        private readonly IVnPayService _vnPayService;
+        
+        public CheckoutController(IEmailSender emailSender , DataContext context , IVnPayService vnPayService)
         {
             _datacontext = context;
             _emailSender = emailSender;
+            _vnPayService = vnPayService;
         }
-        public async Task<IActionResult> Checkout()
+        public async Task<IActionResult> Checkout(string PaymentMethod , string PaymentId)
         {
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
             if(userEmail == null)
@@ -37,10 +41,23 @@ namespace WebTMDT_DACN.Controllers
                 {
                     var shippingPriceJson = shippingPriceCookie;
                     shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
+                }else                 {
+                    shippingPrice = 0;
                 }
                 orderItem.ShippingCost = shippingPrice;
                 orderItem.UserName = userEmail;
-                orderItem.Status = 1;
+                if(PaymentMethod == "COD")
+                {
+                    orderItem.PaymentMethod = PaymentMethod;
+                }else if(PaymentMethod == "Vnpay")
+                {
+                    orderItem.PaymentMethod = "Vnpay" + PaymentId;
+                }else
+                {
+                    orderItem.PaymentMethod = "Other";
+                }
+
+                    orderItem.Status = 1;
                 orderItem.CreatedDate = DateTime.Now;
                 _datacontext.Add(orderItem);
                 _datacontext.SaveChanges();
@@ -72,6 +89,37 @@ namespace WebTMDT_DACN.Controllers
             }
             return View();
         }
-        
+        [HttpGet]
+        public async Task<IActionResult> PaymentCallbackVnpay()
+        {
+            var response = _vnPayService.PaymentExecute(Request.Query);
+            if (response.VnPayResponseCode == "00") //giao dịch thành công lưu db
+            {
+                var newVnpayInsert = new VnpayModel
+                {
+                    OrderId = response.OrderId,
+                    PaymentMethod = response.PaymentMethod,
+                    OrderDescription = response.OrderDescription,
+                    TransactionId = response.TransactionId,
+                    PaymentId = response.PaymentId,
+                    DateCreated = DateTime.Now
+                };
+
+                _datacontext.Add(newVnpayInsert);
+                await _datacontext.SaveChangesAsync();
+                //Tiến hành đặt đơn hàng khi thanh toán momo thành công
+                var PaymentMethod = response.PaymentMethod;
+                var PaymentId = response.PaymentId;
+                await Checkout(PaymentMethod, PaymentId);
+            }
+            else
+            {
+                TempData["success"] = "Giao dịch Vnpay thành công.";
+                return RedirectToAction("Index", "Cart");
+            }
+            //return Json(response);
+            return View(response);
+        }
+
     }
 }
